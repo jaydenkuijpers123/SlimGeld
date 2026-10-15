@@ -4,696 +4,864 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="SlimGeld helpt je budgetteren, sparen en slimmer omgaan met geld.">
-<title>SlimGeld | Slimmer met je geld</title>
-
+<meta name="theme-color" content="#176b52">
+<meta name="description" content="SlimGeld helpt je budgetteren, sparen en op een leuke manier meer leren over geld.">
+<title>SlimGeld 2.0 — Slim omgaan met geld</title>
 <style>
 :root {
-  --bg:#f4f7f4;
-  --card:#ffffff;
-  --text:#19372a;
-  --muted:#718076;
-  --green:#176b45;
-  --light:#e5f3e9;
-  --border:#e1e9e3;
+  --bg:#f4f7f3;--panel:#fff;--text:#20352c;--muted:#718077;
+  --primary:#176b52;--primary2:#218568;--soft:#e5f4ec;
+  --border:#e3eae4;--danger:#c94c4c;--yellow:#fff3cf;
+  --shadow:0 8px 28px #183d2810;--radius:18px;
 }
-* { box-sizing:border-box; }
-body {
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  transition:.2s;
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;transition:background .2s,color .2s}
+body.dark{--bg:#101a16;--panel:#1a2922;--text:#edf6ef;--muted:#a0b3a7;--primary:#61c59c;--primary2:#43a982;--soft:#243d31;--border:#304238;--yellow:#423a25;--shadow:0 8px 28px #0002}
+body.blue{--primary:#3264b4;--primary2:#5484d5;--soft:#e6efff}
+body.purple{--primary:#7851a9;--primary2:#9a77c5;--soft:#f0e7ff}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--primary2);outline-offset:2px}
+.app{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;background:var(--panel);border-right:1px solid var(--border);padding:24px 15px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px}
+.logo{width:43px;height:43px;border-radius:14px;background:var(--primary);color:white;display:grid;place-items:center;font-size:23px}
+.brand h1{font-size:20px;margin:0}
+.brand small{color:var(--muted)}
+.nav-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--muted);padding:0 12px;margin:4px 0}
+nav{display:grid;gap:5px}
+.nav-btn{display:flex;align-items:center;gap:12px;border:0;background:transparent;color:var(--muted);text-align:left;padding:11px 12px;border-radius:12px;font-weight:650;font-size:13px}
+.nav-btn:hover,.nav-btn.active{background:var(--soft);color:var(--primary)}
+.nav-btn .ico{width:21px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:auto;background:var(--soft);border-radius:15px;padding:15px}
+.sidebar-bottom p{font-size:12px;line-height:1.6;color:var(--muted)}
+.main{min-width:0;padding:28px clamp(14px,3vw,38px) 80px;max-width:1600px;width:100%;margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:28px}
+.eyebrow{color:var(--primary);font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+h2{font-size:clamp(24px,3vw,32px);margin:7px 0}
+h3{margin:0 0 12px;font-size:16px}
+p{line-height:1.6}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:42px;height:42px;border:1px solid var(--border);background:var(--panel);border-radius:13px;color:var(--text);font-size:18px}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--primary);font-weight:900}
+.page{display:none}
+.page.active{display:block;animation:appear .2s ease}
+@keyframes appear{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hero{background:linear-gradient(120deg,#135c46,#268b68);color:white;border-radius:24px;padding:clamp(23px,4vw,40px);display:grid;grid-template-columns:1.5fr 1fr;align-items:center;gap:20px;overflow:hidden;position:relative}
+.hero h2{font-size:clamp(26px,4vw,39px);line-height:1.13;max-width:550px}
+.hero p{color:#e0f2e8;max-width:510px;font-size:14px}
+.hero-art{font-size:clamp(75px,10vw,120px);text-align:center;filter:drop-shadow(0 10px 15px #003b2b55)}
+.hero .eyebrow{color:#c5f5dc}
+.btn{border:0;border-radius:11px;padding:11px 15px;font-size:13px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:transform .15s,opacity .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--primary);color:white}
+.btn.light{background:white;color:#176b52}
+.btn.soft{background:var(--soft);color:var(--primary)}
+.btn.outline{border:1px solid var(--border);background:var(--panel);color:var(--text)}
+.btn.danger{background:#fff0f0;color:var(--danger)}
+body.dark .btn.danger{background:#402828}
+.btn.smallbtn{padding:7px 10px;font-size:11px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:27px 0 14px}
+.section-head h3{margin:0}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:18px}
+.stat,.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);min-width:0}
+.stat-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.stat-icon{height:37px;width:37px;display:grid;place-items:center;background:var(--soft);border-radius:12px;font-size:18px}
+.stat-label{font-size:12px;color:var(--muted);font-weight:650}
+.stat-value{font-size:clamp(19px,2vw,27px);font-weight:850;letter-spacing:-.7px;margin:13px 0 5px;overflow-wrap:anywhere}
+.positive{color:var(--primary)}.negative{color:var(--danger)}
+.columns{grid-template-columns:1.3fr 1fr;margin-top:18px}
+.card-sub{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:16px}
+.progress{height:9px;background:var(--border);border-radius:99px;overflow:hidden}
+.progress span{height:100%;width:0;display:block;background:var(--primary);border-radius:99px;transition:width .25s}
+.progress.warn span{background:#e3a13d}
+.progress.danger span{background:var(--danger)}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.category-row{display:grid;grid-template-columns:95px 1fr 62px;gap:10px;align-items:center;margin:16px 0;font-size:12px}
+.category-row .progress{height:7px}
+.tip-card{background:var(--yellow);border:1px solid var(--border);border-radius:17px;padding:18px;display:flex;gap:14px;align-items:flex-start}
+.tip-icon{font-size:27px}
+.tip-card p{margin:5px 0;font-size:13px}
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.quick-action{padding:17px 12px;background:var(--panel);border:1px solid var(--border);border-radius:15px;color:var(--text);text-align:left}
+.quick-action span{display:block;font-size:23px;margin-bottom:10px}
+.quick-action strong{font-size:13px}
+.quick-action small{display:block;color:var(--muted);margin-top:5px;font-size:11px}
+.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.field{display:grid;gap:6px;margin-bottom:13px}
+.field label{font-size:12px;font-weight:750}
+.field input,.field select,.field textarea,.input{width:100%;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 12px}
+.field input[type="checkbox"]{width:auto}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:9px;flex-wrap:wrap}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:15px}
+.toolbar input,.toolbar select{max-width:230px;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px}
+.list{display:grid;gap:9px}
+.item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--border);border-radius:13px;min-width:0}
+.item-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:13px;background:var(--soft);font-size:20px}
+.item-main{min-width:0;flex:1}
+.item-main strong{display:block;font-size:13px;overflow-wrap:anywhere}
+.item-main small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.item-value{font-size:13px;font-weight:800;text-align:right;white-space:nowrap}
+.empty{text-align:center;padding:32px 15px;color:var(--muted);font-size:13px}
+.empty span{display:block;font-size:35px;margin-bottom:8px}
+.badge-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.badge-card{text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:17px 9px}
+.badge-card .medal{font-size:34px;filter:grayscale(1);opacity:.35}
+.badge-card.unlocked .medal{filter:none;opacity:1}
+.badge-card strong{display:block;font-size:12px;margin:9px 0 4px}
+.badge-card small{font-size:10px;color:var(--muted)}
+.lesson{display:flex;gap:13px;align-items:center;padding:15px;border:1px solid var(--border);border-radius:14px;margin-bottom:10px;background:var(--panel)}
+.lesson-num{width:40px;height:40px;flex:0 0 40px;border-radius:13px;display:grid;place-items:center;background:var(--soft);color:var(--primary);font-weight:850}
+.lesson-content{flex:1;min-width:0}
+.lesson-content strong{font-size:13px}
+.lesson-content p{font-size:12px;color:var(--muted);margin:4px 0}
+.quiz-option{display:block;width:100%;padding:13px;text-align:left;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:11px;margin:8px 0;font-size:13px}
+.quiz-option:hover{border-color:var(--primary)}
+.quiz-option.correct{background:var(--soft);border-color:var(--primary)}
+.quiz-option.incorrect{background:#fff0f0;border-color:var(--danger)}
+body.dark .quiz-option.incorrect{background:#402828}
+.calendar-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.day-name{text-align:center;font-size:11px;font-weight:800;color:var(--muted);padding:8px 0}
+.day{min-height:83px;border:1px solid var(--border);border-radius:10px;padding:7px;background:var(--panel);font-size:12px;min-width:0}
+.day.today{border:2px solid var(--primary)}
+.day.muted-day{opacity:.45}
+.day-number{font-weight:800}
+.day-event{display:block;margin-top:5px;padding:3px 4px;background:var(--soft);color:var(--primary);border-radius:4px;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day-event.expense{background:#fff0f0;color:#b74343}
+body.dark .day-event.expense{background:#402828;color:#ffb2b2}
+.sim-choice{width:100%;text-align:left;padding:15px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:13px;margin-top:9px}
+.sim-choice:hover{border-color:var(--primary);background:var(--soft)}
+.notice{padding:13px 15px;border-radius:12px;background:var(--soft);font-size:12px;line-height:1.6}
+.footer{text-align:center;font-size:11px;color:var(--muted);margin-top:40px;padding:20px}
+.mobile-nav{display:none}
+.hidden{display:none!important}
+.pill{display:inline-flex;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--primary);font-size:10px;font-weight:800}
+canvas{width:100%;height:220px;display:block}
+hr{border:0;border-top:1px solid var(--border);margin:18px 0}
+@media(max-width:1050px){
+ .app{grid-template-columns:205px minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .four,.badge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-header {
-  background:var(--card);
-  padding:18px 5%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--border);
-  position:sticky;
-  top:0;
-  z-index:5;
+@media(max-width:760px){
+ .app{display:block}.sidebar{display:none}.main{padding:19px 14px 95px}
+ .topbar{margin-bottom:20px}.topbar h2{font-size:24px}.hero{grid-template-columns:1fr;padding:24px}.hero-art{display:none}
+ .columns,.two,.three{grid-template-columns:1fr}.quick-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .quick-action{padding:12px 8px}.quick-action strong{font-size:11px}.quick-action small{font-size:10px}
+ .stat,.card{padding:16px}.stats{gap:10px}.stat-value{font-size:22px}
+ .mobile-nav{position:fixed;z-index:20;bottom:0;left:0;right:0;display:flex;overflow-x:auto;gap:4px;padding:7px 6px calc(7px + env(safe-area-inset-bottom));background:var(--panel);border-top:1px solid var(--border)}
+ .mobile-nav button{flex:1;min-width:56px;border:0;background:transparent;color:var(--muted);font-size:10px;padding:6px 3px;border-radius:9px}
+ .mobile-nav button span{display:block;font-size:19px;margin-bottom:3px}
+ .mobile-nav button.active{background:var(--soft);color:var(--primary)}
+ .day{min-height:61px;padding:4px}.day-event{font-size:8px;padding:2px}.calendar-grid{gap:3px}
+ .form-row{grid-template-columns:1fr}.category-row{grid-template-columns:75px 1fr 50px}
+ .badge-grid{gap:8px}.badge-card{padding:13px 6px}
 }
-.logo {font-size:25px;font-weight:bold;color:var(--green)}
-button,input,select {font:inherit}
-button {
-  background:var(--green);
-  color:white;
-  border:0;
-  border-radius:10px;
-  padding:11px 15px;
-  cursor:pointer;
-}
-button:hover {opacity:.85}
-.secondary {background:var(--light);color:var(--green)}
-nav {
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-  padding:14px 5%;
-  background:var(--card);
-}
-nav button {background:transparent;color:var(--text)}
-nav button.active,nav button:hover {background:var(--light);color:var(--green)}
-main {max-width:1150px;margin:auto;padding:25px 18px}
-h1 {font-size:clamp(28px,4vw,42px);margin-bottom:8px}
-h2 {font-size:21px}
-p {line-height:1.6}
-.muted {color:var(--muted)}
-.hero {
-  background:linear-gradient(120deg,#e1f3e7,#fff5e7);
-  border-radius:22px;
-  padding:32px;
-  margin-bottom:22px;
-}
-.hero p {max-width:650px}
-.grid {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
-  margin:18px 0;
-}
-.two {grid-template-columns:repeat(2,minmax(0,1fr))}
-.card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:20px;
-  min-width:0;
-  box-shadow:0 5px 20px #19372a08;
-}
-.big {font-size:30px;font-weight:bold;margin:12px 0}
-form {display:grid;gap:12px}
-label {display:block;font-size:14px;font-weight:bold;margin-bottom:6px}
-input,select {
-  width:100%;
-  padding:12px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--card);
-  color:var(--text);
-}
-.field {min-width:0}
-.row {display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.row input {flex:1;min-width:100px}
-.item {
-  padding:13px 0;
-  border-bottom:1px solid var(--border);
-}
-.item:last-child {border-bottom:0}
-.progress {
-  background:#e5eae6;
-  height:10px;
-  border-radius:20px;
-  overflow:hidden;
-  margin:10px 0;
-}
-.progress div {
-  height:100%;
-  background:#239461;
-  border-radius:20px;
-}
-.tip {
-  background:#fff3df;
-  padding:17px;
-  border-radius:15px;
-  margin:16px 0;
-  color:#654a28;
-}
-.page {display:none}
-.page.active {display:block}
-footer {
-  text-align:center;
-  color:var(--muted);
-  padding:30px 10px;
-}
-.danger {background:#a74737}
-.answer {
-  display:block;
-  width:100%;
-  text-align:left;
-  margin:8px 0;
-  background:var(--light);
-  color:var(--text);
-}
-.notice {
-  padding:13px;
-  border-radius:12px;
-  background:var(--light);
-  font-size:14px;
-  line-height:1.5;
-  margin-top:14px;
-}
-body.dark {
-  --bg:#101b16;
-  --card:#19271f;
-  --text:#e7f0e9;
-  --muted:#a0b1a5;
-  --green:#39a66e;
-  --light:#263e2e;
-  --border:#304137;
-}
-body.dark .hero {
-  background:linear-gradient(120deg,#203b2b,#393020);
-}
-body.dark .tip {background:#393020;color:#f5dfb9}
-body.dark .progress {background:#344238}
-@media(max-width:750px) {
-  .grid,.two {grid-template-columns:1fr}
-  header {padding:15px}
-  nav {padding:10px}
-  nav button {padding:9px}
-  .hero {padding:23px}
-  main {padding:17px 12px}
-}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
-
 <body>
-<header>
-  <div class="logo">💶 SlimGeld</div>
-  <button id="theme">🌙 Donkere modus</button>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">€</div><div><h1>SlimGeld</h1><small>Leer. Spaar. Groei.</small></div></div>
+  <div>
+    <div class="nav-label">OVERZICHT</div>
+    <nav id="sideNav">
+      <button class="nav-btn active" data-page="home"><span class="ico">⌂</span>Dashboard</button>
+      <button class="nav-btn" data-page="transactions"><span class="ico">↔</span>Inkomsten & uitgaven</button>
+      <button class="nav-btn" data-page="budget"><span class="ico">▤</span>Budgetplanner</button>
+      <button class="nav-btn" data-page="goals"><span class="ico">◎</span>Spaardoelen</button>
+      <button class="nav-btn" data-page="calendar"><span class="ico">▦</span>Kalender & rekeningen</button>
+      <button class="nav-btn" data-page="stats"><span class="ico">▥</span>Statistieken</button>
+    </nav>
+  </div>
+  <div>
+    <div class="nav-label">ONTDEK</div>
+    <nav>
+      <button class="nav-btn" data-page="challenges"><span class="ico">🏆</span>Challenges & badges</button>
+      <button class="nav-btn" data-page="learn"><span class="ico">▣</span>Geldacademie</button>
+      <button class="nav-btn" data-page="simulator"><span class="ico">◇</span>Geldsimulator</button>
+      <button class="nav-btn" data-page="tips"><span class="ico">✦</span>Bespaartips</button>
+      <button class="nav-btn" data-page="settings"><span class="ico">⚙</span>Instellingen & privacy</button>
+    </nav>
+  </div>
+  <div class="sidebar-bottom"><strong>💡 Slimme tip</strong><p>Een klein bedrag regelmatig sparen kan op termijn een groot verschil maken.</p><button class="btn soft smallbtn" data-go="tips">Bekijk tips →</button></div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div><div class="eyebrow" id="todayLabel">JOUW GELDOVERZICHT</div><h2 id="pageTitle">Goed bezig! 👋</h2><div class="muted small" id="pageSubtitle">Krijg grip op je geld, stap voor stap.</div></div>
+  <div class="top-actions"><button class="icon-btn" id="themeQuick" title="Wissel thema">☼</button><div class="avatar" id="avatar">S</div></div>
 </header>
 
-<nav>
-  <button class="active" data-page="home">🏠 Home</button>
-  <button data-page="transactions">💳 Uitgaven</button>
-  <button data-page="goals">🎯 Sparen</button>
-  <button data-page="budget">📊 Budgetplanner</button>
-  <button data-page="tips">💡 Besparen</button>
-  <button data-page="quiz">🧠 Geldquiz</button>
-</nav>
-
-<main>
-<section id="home" class="page active">
-  <div class="hero">
-    <h1>Goed bezig met je geld! 👋</h1>
-    <p>Welkom bij SlimGeld. Krijg overzicht, maak plannen en werk stap voor stap aan je spaardoelen.</p>
-    <button onclick="showPage('transactions')">+ Transactie toevoegen</button>
-    <button class="secondary" onclick="showPage('goals')">Mijn spaardoelen</button>
+<section class="page active" id="page-home">
+  <div class="hero"><div><div class="eyebrow">JOUW GELD, JOUW PLAN</div><h2>Elke euro een stap dichter bij je doel.</h2><p>Houd overzicht, oefen met slimme keuzes en bouw aan je financiële toekomst.</p><button class="btn light" data-go="transactions">+ Nieuwe transactie</button> <button class="btn" style="background:#ffffff24;color:white" data-go="goals">Mijn spaardoelen →</button></div><div class="hero-art">💰</div></div>
+  <div class="grid stats">
+    <div class="stat"><div class="stat-top"><span class="stat-label">Saldo deze maand</span><span class="stat-icon">💳</span></div><div class="stat-value" id="homeBalance">€ 0,00</div><div class="small muted">Inkomsten min uitgaven</div></div>
+    <div class="stat"><div class="stat-top"><span class="stat-label">Inkomsten</span><span class="stat-icon">↗️</span></div><div class="stat-value positive" id="homeIncome">€ 0,00</div><div class="small muted">Deze maand</div></div>
+    <div class="stat"><div class="stat-top"><span class="stat-label">Uitgaven</span><span class="stat-icon">↘️</span></div><div class="stat-value" id="homeExpense">€ 0,00</div><div class="small muted">Deze maand</div></div>
+    <div class="stat"><div class="stat-top"><span class="stat-label">Spaargeld</span><span class="stat-icon">🐷</span></div><div class="stat-value" id="homeSavings">€ 0,00</div><div class="small muted">In jouw spaardoelen</div></div>
   </div>
-
-  <div class="tip">
-    <strong>💡 Tip van vandaag</strong>
-    <p id="dailyTip">Houd je uitgaven bij om te ontdekken waar je geld naartoe gaat.</p>
+  <div class="section-head"><h3>Snel aan de slag</h3><span class="pill">SlimGeld 2.0</span></div>
+  <div class="quick-actions">
+    <button class="quick-action" data-go="transactions"><span>➕</span><strong>Transactie</strong><small>Noteer geld</small></button>
+    <button class="quick-action" data-go="goals"><span>🎯</span><strong>Spaardoel</strong><small>Plan je doel</small></button>
+    <button class="quick-action" data-go="learn"><span>🧠</span><strong>Leren</strong><small>Test je kennis</small></button>
   </div>
-
-  <div class="grid">
-    <div class="card">
-      <div class="muted">Inkomsten deze maand</div>
-      <div class="big" id="income">€ 0,00</div>
-    </div>
-    <div class="card">
-      <div class="muted">Uitgaven deze maand</div>
-      <div class="big" id="expenses">€ 0,00</div>
-    </div>
-    <div class="card">
-      <div class="muted">Overgebleven deze maand</div>
-      <div class="big" id="remaining">€ 0,00</div>
-    </div>
+  <div class="grid columns">
+    <div class="card"><div class="section-head" style="margin-top:0"><h3>Uitgaven deze maand</h3><button class="btn soft smallbtn" data-go="stats">Details</button></div><div class="card-sub">Waar gaat je geld naartoe?</div><div id="homeCategories"></div></div>
+    <div class="card"><div class="section-head" style="margin-top:0"><h3>Budget in beeld</h3><button class="btn soft smallbtn" data-go="budget">Aanpassen</button></div><div class="card-sub">Je maandelijkse uitgavenbudget</div><div class="row-between"><span class="muted small">Gebruikt</span><strong id="homeBudgetText">€ 0 / € 0</strong></div><div class="progress" style="margin:12px 0" id="homeBudgetBar"><span></span></div><p class="muted small" id="homeBudgetMessage">Stel een budget in om te beginnen.</p><hr><div class="row-between"><span class="small muted">Volgende rekening</span><strong class="small" id="nextBill">Nog geen rekeningen</strong></div></div>
   </div>
-
-  <div class="grid two">
-    <div class="card">
-      <h2>📊 Uitgaven per categorie</h2>
-      <div id="categories" class="muted">Voeg een uitgave toe om je overzicht te bekijken.</div>
-    </div>
-    <div class="card">
-      <h2>🎯 Mijn spaardoelen</h2>
-      <div id="homeGoals">Je hebt nog geen spaardoelen.</div>
-      <button onclick="showPage('goals')">Bekijk spaardoelen</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🧾 Recente transacties</h2>
-    <div id="recent" class="muted">Nog geen transacties.</div>
-  </div>
+  <div class="section-head"><h3>Recente transacties</h3><button class="btn soft smallbtn" data-go="transactions">Alles bekijken →</button></div>
+  <div class="card"><div class="list" id="homeRecent"></div></div>
+  <div class="section-head"><h3>Tip van vandaag</h3></div>
+  <div class="tip-card"><span class="tip-icon" id="homeTipIcon">💡</span><div><strong id="homeTipTitle">Kleine stappen tellen</strong><p id="homeTipText">Schrijf je uitgaven op om inzicht te krijgen.</p><button class="btn soft smallbtn" data-go="tips">Meer bespaartips →</button></div></div>
 </section>
 
-<section id="transactions" class="page">
-  <h1>Inkomsten en uitgaven</h1>
-  <p class="muted">Houd je geld bij in een overzichtelijke lijst.</p>
-
-  <div class="grid two">
-    <div class="card">
-      <h2>Nieuwe transactie</h2>
-      <form id="transactionForm">
-        <div class="field">
-          <label for="type">Soort</label>
-          <select id="type">
-            <option value="expense">Uitgave</option>
-            <option value="income">Inkomst</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="amount">Bedrag in euro's</label>
-          <input id="amount" type="number" min="0.01" step="0.01" required placeholder="12,50">
-        </div>
-        <div class="field">
-          <label for="description">Omschrijving</label>
-          <input id="description" required maxlength="80" placeholder="Bijvoorbeeld boodschappen">
-        </div>
-        <div class="field">
-          <label for="category">Categorie</label>
-          <select id="category">
-            <option>Boodschappen</option>
-            <option>Vervoer</option>
-            <option>Hobby</option>
-            <option>Kleding</option>
-            <option>Abonnementen</option>
-            <option>School</option>
-            <option>Wonen</option>
-            <option>Overig</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="date">Datum</label>
-          <input id="date" type="date" required>
-        </div>
-        <button type="submit">Transactie opslaan</button>
-      </form>
-    </div>
-
-    <div class="card">
-      <h2>Alle transacties</h2>
-      <div id="allTransactions">Nog geen transacties.</div>
-      <div class="row">
-        <button class="secondary" onclick="downloadCSV()">Download CSV</button>
-        <button class="danger" onclick="clearTransactions()">Alles wissen</button>
-      </div>
-    </div>
-  </div>
-  <div class="notice">Je gegevens worden alleen in de browser op dit apparaat bewaard. Gebruik voor deze demo geen gevoelige bankgegevens.</div>
-</section>
-
-<section id="goals" class="page">
-  <h1>Mijn spaardoelen 🎯</h1>
-  <p class="muted">Stel doelen in en houd je vooruitgang bij.</p>
-
-  <div class="grid two">
-    <div class="card">
-      <h2>Nieuw spaardoel</h2>
-      <form id="goalForm">
-        <div class="field">
-          <label for="goalName">Waar spaar je voor?</label>
-          <input id="goalName" required maxlength="60" placeholder="Bijvoorbeeld een fiets">
-        </div>
-        <div class="field">
-          <label for="goalTarget">Doelbedrag (€)</label>
-          <input id="goalTarget" type="number" min="1" step="0.01" required>
-        </div>
-        <div class="field">
-          <label for="goalSaved">Al gespaard (€)</label>
-          <input id="goalSaved" type="number" min="0" step="0.01" value="0" required>
-        </div>
-        <button type="submit">Spaardoel maken</button>
-      </form>
-    </div>
-    <div class="card">
-      <h2>🪙 Spaarcalculator</h2>
-      <label for="weekly">Hoeveel spaar je per week?</label>
-      <input id="weekly" type="number" min="0" step="0.01" value="10">
-      <p id="weeklyResult"></p>
-      <div class="notice">Kies een bedrag dat bij jouw situatie past. Je hoeft niet iedere week hetzelfde te sparen.</div>
-    </div>
-  </div>
-
+<section class="page" id="page-transactions">
+  <div class="section-head"><h3>Nieuwe transactie</h3></div>
   <div class="card">
-    <h2>Mijn doelen</h2>
-    <div id="allGoals">Je hebt nog geen spaardoelen.</div>
-  </div>
-</section>
-
-<section id="budget" class="page">
-  <h1>Budgetplanner 📊</h1>
-  <p class="muted">Plan je maand en bekijk wat je overhoudt.</p>
-
-  <div class="grid two">
-    <div class="card">
-      <h2>Maandbudget</h2>
-      <form id="budgetForm">
-        <div class="field">
-          <label for="bIncome">Verwachte inkomsten (€)</label>
-          <input id="bIncome" type="number" min="0" step="0.01" value="0">
-        </div>
-        <div class="field">
-          <label for="bNeeds">Noodzakelijke uitgaven (€)</label>
-          <input id="bNeeds" type="number" min="0" step="0.01" value="0">
-        </div>
-        <div class="field">
-          <label for="bWants">Leuke dingen (€)</label>
-          <input id="bWants" type="number" min="0" step="0.01" value="0">
-        </div>
-        <div class="field">
-          <label for="bSave">Sparen (€)</label>
-          <input id="bSave" type="number" min="0" step="0.01" value="0">
-        </div>
-        <button type="submit">Bereken mijn budget</button>
-      </form>
-    </div>
-    <div class="card">
-      <h2>Jouw resultaat</h2>
-      <div id="budgetResult" class="muted">Vul je bedragen in en bereken je budget.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🧮 Maandelijkse kosten berekenen</h2>
-    <div class="grid two">
-      <div>
-        <label for="monthlyCost">Kosten per maand (€)</label>
-        <input id="monthlyCost" type="number" min="0" step="0.01" value="10">
+    <form id="transactionForm">
+      <div class="form-row">
+        <div class="field"><label for="txType">Type</label><select id="txType"><option value="expense">Uitgave</option><option value="income">Inkomst</option></select></div>
+        <div class="field"><label for="txAmount">Bedrag (€)</label><input id="txAmount" type="number" min="0.01" step="0.01" placeholder="12,50" required></div>
       </div>
-      <div>
-        <label for="months">Aantal maanden</label>
-        <input id="months" type="number" min="1" max="120" value="12">
+      <div class="form-row">
+        <div class="field"><label for="txName">Omschrijving</label><input id="txName" maxlength="80" placeholder="Bijv. boodschappen" required></div>
+        <div class="field"><label for="txCategory">Categorie</label><select id="txCategory"><option>Boodschappen</option><option>Vervoer</option><option>Horeca</option><option>Winkelen</option><option>Abonnementen</option><option>Wonen</option><option>School</option><option>Vrije tijd</option><option>Sparen</option><option>Zakgeld</option><option>Salaris</option><option>Overig</option></select></div>
       </div>
-    </div>
-    <div class="big" id="yearCost">€ 120,00</div>
-    <div class="muted">Totale kosten over de gekozen periode.</div>
-  </div>
-
-  <div class="card">
-    <h2>📱 Abonnementenchecker</h2>
-    <form id="subscriptionForm">
-      <div class="field">
-        <label for="subName">Naam abonnement</label>
-        <input id="subName" required placeholder="Bijvoorbeeld muziekapp">
-      </div>
-      <div class="field">
-        <label for="subPrice">Prijs per maand (€)</label>
-        <input id="subPrice" type="number" min="0.01" step="0.01" required>
-      </div>
-      <button type="submit">Abonnement toevoegen</button>
+      <div class="field"><label for="txDate">Datum</label><input id="txDate" type="date" required></div>
+      <div class="form-actions"><button class="btn primary" type="submit">+ Transactie toevoegen</button><button class="btn outline" type="reset">Leegmaken</button></div>
     </form>
-    <div id="subscriptions"></div>
-    <div class="big" id="subTotal">€ 0,00 per jaar</div>
   </div>
+  <div class="section-head"><h3>Jouw transacties</h3><span class="pill" id="txCount">0 transacties</span></div>
+  <div class="toolbar"><input id="txSearch" placeholder="Zoek omschrijving..." aria-label="Zoek transacties"><select id="txFilter"><option value="all">Alles</option><option value="income">Inkomsten</option><option value="expense">Uitgaven</option></select><select id="txMonth"><option value="all">Alle maanden</option></select><button class="btn outline" id="exportCsv">↓ Export CSV</button></div>
+  <div class="card"><div class="list" id="transactionList"></div></div>
 </section>
 
-<section id="tips" class="page">
-  <h1>Bespaartips 💡</h1>
-  <p class="muted">Praktische ideeën om bewuster met geld om te gaan.</p>
-  <div class="grid">
-    <div class="card"><h2>🛒 Boodschappenlijst</h2><p>Maak vooraf een lijst en vergelijk prijzen per kilo of liter.</p></div>
-    <div class="card"><h2>⏳ Wacht 24 uur</h2><p>Denk even na voordat je iets koopt dat je niet echt nodig hebt.</p></div>
-    <div class="card"><h2>📱 Abonnementen</h2><p>Controleer welke abonnementen je nog gebruikt en wat ze kosten.</p></div>
-    <div class="card"><h2>🥪 Neem iets mee</h2><p>Zelf eten en drinken meenemen kan voordeliger zijn.</p></div>
-    <div class="card"><h2>🎯 Stel een spaardoel</h2><p>Een concreet doel helpt je om je voortgang te volgen.</p></div>
-    <div class="card"><h2>🧾 Bekijk je uitgaven</h2><p>Controleer wekelijks je uitgaven en kijk waar je eventueel kunt aanpassen.</p></div>
+<section class="page" id="page-budget">
+  <div class="section-head"><h3>Jouw maandbudget</h3></div>
+  <div class="grid columns">
+    <div class="card"><h3>Budget instellen</h3><p class="card-sub">Kies hoeveel je maximaal per maand wilt uitgeven.</p><form id="budgetForm"><div class="field"><label for="budgetAmount">Maandelijks uitgavenbudget (€)</label><input id="budgetAmount" type="number" min="0" step="0.01" required></div><button class="btn primary">Budget opslaan</button></form><hr><div class="row-between"><span class="muted small">Besteed deze maand</span><strong id="budgetSpent">€ 0,00</strong></div><div class="progress" id="budgetProgress" style="margin:12px 0"><span></span></div><div id="budgetAdvice" class="notice">Stel je budget in.</div></div>
+    <div class="card"><h3>Vaste maandkosten</h3><p class="card-sub">Bereken wat je terugkerende kosten samen kosten.</p><form id="fixedCostForm"><div class="field"><label for="fixedName">Naam</label><input id="fixedName" maxlength="70" placeholder="Bijv. telefoonabonnement" required></div><div class="form-row"><div class="field"><label for="fixedAmount">Bedrag (€)</label><input id="fixedAmount" type="number" min="0.01" step="0.01" required></div><div class="field"><label for="fixedDay">Vervaldag</label><input id="fixedDay" type="number" min="1" max="28" value="1" required></div></div><div class="field"><label for="fixedCategory">Categorie</label><select id="fixedCategory"><option>Abonnementen</option><option>Wonen</option><option>Vervoer</option><option>Verzekering</option><option>Overig</option></select></div><button class="btn primary">+ Vaste kosten toevoegen</button></form></div>
   </div>
+  <div class="section-head"><h3>Overzicht vaste kosten</h3><strong id="fixedTotal">€ 0,00 / maand</strong></div>
+  <div class="card"><div class="list" id="fixedList"></div></div>
+  <div class="section-head"><h3>Abonnementencheck</h3></div>
+  <div class="card"><p class="card-sub">Voeg abonnementen toe aan je vaste kosten om ze in dit overzicht mee te nemen.</p><div class="row-between"><span>Totale vaste maandkosten</span><strong id="subscriptionTotal">€ 0,00</strong></div><p class="muted small">Tip: controleer af en toe welke abonnementen je nog gebruikt.</p></div>
+</section>
+
+<section class="page" id="page-goals">
+  <div class="section-head"><h3>Spaardoelen</h3><span class="pill" id="goalCount">0 doelen</span></div>
+  <div class="grid columns">
+    <div class="card"><h3>Nieuw spaardoel</h3><form id="goalForm">
+      <div class="field"><label for="goalName">Waar spaar je voor?</label><input id="goalName" maxlength="70" placeholder="Bijv. nieuwe fiets" required></div>
+      <div class="form-row"><div class="field"><label for="goalTarget">Doelbedrag (€)</label><input id="goalTarget" type="number" min="0.01" step="0.01" required></div><div class="field"><label for="goalSaved">Al gespaard (€)</label><input id="goalSaved" type="number" min="0" step="0.01" value="0" required></div></div>
+      <div class="field"><label for="goalDate">Streefdatum (optioneel)</label><input id="goalDate" type="date"></div><button class="btn primary">+ Spaardoel toevoegen</button>
+    </form></div>
+    <div class="card"><h3>🎯 Aankoopplanner</h3><p class="card-sub">Ontdek hoelang je ongeveer moet sparen voor een aankoop.</p><div class="field"><label for="purchaseName">Wat wil je kopen?</label><input id="purchaseName" maxlength="70" placeholder="Bijv. koptelefoon"></div><div class="field"><label for="purchasePrice">Prijs (€)</label><input id="purchasePrice" type="number" min="0.01" step="0.01" placeholder="150"></div><div class="field"><label for="purchaseCurrent">Al gespaard (€)</label><input id="purchaseCurrent" type="number" min="0" step="0.01" value="0"></div><div class="field"><label for="purchaseWeekly">Sparen per week (€)</label><input id="purchaseWeekly" type="number" min="0.01" step="0.01" placeholder="10"></div><button class="btn primary" id="calculatePurchase" type="button">Bereken mijn plan</button><div id="purchaseResult" class="notice hidden" style="margin-top:13px"></div></div>
+  </div>
+  <div class="section-head"><h3>Mijn doelen</h3></div><div class="grid two" id="goalsList"></div>
+</section>
+
+<section class="page" id="page-calendar">
+  <div class="section-head"><h3>Kalender & rekeningen</h3><span class="pill">Maandoverzicht</span></div>
   <div class="card">
-    <h2>De 50/30/20-methode</h2>
-    <p>Een bekende richtlijn verdeelt je budget in 50% behoeften, 30% wensen en 20% sparen of financiële doelen. Dit is slechts een voorbeeld: de juiste verdeling hangt af van je eigen situatie.</p>
+    <div class="calendar-head"><button class="btn outline" id="prevMonth">← Vorige</button><strong id="calendarMonth">Maand</strong><button class="btn outline" id="nextMonth">Volgende →</button></div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+    <hr><div class="small muted">Groene labels: vaste kosten. Rode labels: geregistreerde uitgaven. Vaste kosten worden op hun ingestelde dag getoond.</div>
+  </div>
+  <div class="section-head"><h3>Komende rekeningen</h3><button class="btn soft smallbtn" data-go="budget">Kosten beheren</button></div>
+  <div class="card"><div class="list" id="upcomingBills"></div></div>
+</section>
+
+<section class="page" id="page-stats">
+  <div class="section-head"><h3>Uitgebreide statistieken</h3><span class="pill">Jouw cijfers</span></div>
+  <div class="grid stats">
+    <div class="stat"><span class="stat-label">Gemiddelde uitgave</span><div class="stat-value" id="avgExpense">€ 0,00</div><span class="muted small">Per uitgavetransactie</span></div>
+    <div class="stat"><span class="stat-label">Hoogste categorie</span><div class="stat-value" id="topCategory">—</div><span class="muted small">Deze maand</span></div>
+    <div class="stat"><span class="stat-label">Spaarpercentage</span><div class="stat-value" id="saveRate">0%</div><span class="muted small">Van je inkomsten</span></div>
+    <div class="stat"><span class="stat-label">Transacties</span><div class="stat-value" id="allCount">0</div><span class="muted small">Totaal bijgehouden</span></div>
+  </div>
+  <div class="grid columns">
+    <div class="card"><h3>Inkomsten en uitgaven</h3><p class="card-sub">Vergelijk de laatste zes maanden.</p><canvas id="monthlyChart" height="220" aria-label="Grafiek van inkomsten en uitgaven"></canvas><div class="small muted">Groen = inkomsten · Rood = uitgaven</div></div>
+    <div class="card"><h3>Uitgaven per categorie</h3><p class="card-sub">Deze maand</p><div id="statsCategories"></div></div>
+  </div>
+  <div class="section-head"><h3>Maandvergelijking</h3></div><div class="card"><div class="list" id="monthComparison"></div></div>
+</section>
+
+<section class="page" id="page-challenges">
+  <div class="section-head"><h3>Challenges & beloningen</h3><span class="pill">Speel en leer</span></div>
+  <div class="grid columns">
+    <div class="card"><div class="row-between"><h3>Jouw niveau</h3><span style="font-size:28px">🏆</span></div><div class="stat-value" id="levelName">Starter</div><p class="muted small" id="pointsText">0 XP verzameld</p><div class="progress"><span id="xpBar"></span></div><p class="small muted" id="xpNext">Verdien XP door lessen te voltooien en quizvragen goed te beantwoorden.</p></div>
+    <div class="card"><h3>📅 30-dagen spaaruitdaging</h3><p class="card-sub">Vink een dag af wanneer je je spaardoel voor die dag hebt gehaald.</p><div class="row-between"><strong id="challengeProgress">0 van 30 dagen</strong><span class="pill" id="challengePercent">0%</span></div><div class="progress" style="margin:12px 0"><span id="challengeBar"></span></div><div id="challengeDays" style="display:grid;grid-template-columns:repeat(6,1fr);gap:7px"></div><p class="small muted">Kies zelf een haalbaar bedrag. Je hoeft geen geld uit te geven om mee te doen.</p></div>
+  </div>
+  <div class="section-head"><h3>Verdiende badges</h3></div><div class="badge-grid" id="badgesGrid"></div>
+  <div class="section-head"><h3>Mijn leerdoelen</h3><button class="btn soft smallbtn" data-go="learn">Naar de cursus →</button></div><div class="card" id="learningProgress"></div>
+</section>
+
+<section class="page" id="page-learn">
+  <div class="section-head"><h3>Geldacademie</h3><span class="pill">Gratis leren</span></div>
+  <div class="hero" style="margin-bottom:18px"><div><div class="eyebrow">ELKE DAG EEN BEETJE SLIMMER</div><h2>Geld begrijpen begint hier.</h2><p>Volg korte lessen over budgetteren, sparen, reclame en veilig omgaan met geld.</p></div><div class="hero-art">📚</div></div>
+  <div class="grid columns">
+    <div class="card"><h3>📖 Mini-cursus</h3><p class="card-sub">Voltooi een les om XP te verdienen.</p><div id="courseList"></div></div>
+    <div class="card"><h3>🧠 Dagelijkse geldquiz</h3><p class="card-sub" id="dailyDate">Een nieuwe vraag per dag.</p><div id="dailyQuiz"></div><hr><h3>🎲 Extra geldquiz</h3><p class="small muted">Test je kennis met een willekeurige vraag.</p><button class="btn primary" id="randomQuiz">Start een quizvraag</button><div id="randomQuizArea" style="margin-top:13px"></div></div>
   </div>
 </section>
 
-<section id="quiz" class="page">
-  <h1>Geldquiz 🧠</h1>
-  <p class="muted">Beantwoord vijf vragen en test wat je weet.</p>
-  <div class="card">
-    <div id="question"></div>
-    <div id="answers"></div>
-    <p id="feedback" aria-live="polite"></p>
-    <button id="next" disabled>Volgende vraag →</button>
-    <button class="secondary" id="restart">Opnieuw beginnen</button>
-  </div>
+<section class="page" id="page-simulator">
+  <div class="section-head"><h3>Geldsimulator</h3><span class="pill">Oefen zonder echt geld</span></div>
+  <div class="hero" style="margin-bottom:18px"><div><div class="eyebrow">VEILIG OEFENEN</div><h2>Wat zou jij doen?</h2><p>Maak keuzes in herkenbare situaties. Je kunt hier geen echt geld verliezen of verdienen.</p><button class="btn light" id="startSimulator">Start een scenario →</button></div><div class="hero-art">🎮</div></div>
+  <div class="grid columns"><div class="card"><h3>Scenario</h3><div id="simScenario"><div class="empty"><span>🎯</span>Druk op 'Start een scenario' om te beginnen.</div></div></div><div class="card"><h3>Jouw oefenresultaten</h3><div class="stat-value" id="simScore">0 punten</div><p class="muted small">Punten uit afgeronde scenario's</p><hr><div class="row-between"><span class="small">Scenario's gespeeld</span><strong id="simPlayed">0</strong></div><div class="row-between" style="margin-top:12px"><span class="small">Beste score</span><strong id="simBest">0</strong></div><p class="notice" style="margin-top:18px">De simulator is educatief. De situaties zijn vereenvoudigd en vormen geen persoonlijk financieel advies.</p></div></div>
 </section>
 
-<footer>
-  <strong>SlimGeld</strong><br>
-  Slimmer omgaan met geld, stap voor stap.<br>
-  Educatieve website — geen persoonlijk financieel advies.
-</footer>
+<section class="page" id="page-tips">
+  <div class="section-head"><h3>Bespaartips</h3><span class="pill">Kleine stappen helpen</span></div>
+  <div class="tip-card" style="margin-bottom:18px"><span class="tip-icon">💡</span><div><strong>Tip van vandaag</strong><p id="tipOfDay">Maak een overzicht van je uitgaven.</p><button class="btn soft smallbtn" id="nextTip">Volgende tip →</button></div></div>
+  <div class="grid two" id="tipsGrid"></div>
+  <div class="section-head"><h3>Vaste uitgaven controleren</h3></div><div class="card"><p>Abonnementen en terugkerende uitgaven kunnen ongemerkt oplopen. Controleer regelmatig wat je nog gebruikt en bespreek grote financiële beslissingen zo nodig met een vertrouwde volwassene.</p><button class="btn primary" data-go="budget">Mijn vaste kosten bekijken</button></div>
+</section>
+
+<section class="page" id="page-settings">
+  <div class="section-head"><h3>Instellingen & privacy</h3><span class="pill">Jij hebt de controle</span></div>
+  <div class="grid columns">
+    <div class="card"><h3>🎨 Personalisatie</h3><p class="card-sub">Pas SlimGeld aan jouw smaak aan.</p><div class="field"><label for="displayName">Weergavenaam</label><input id="displayName" maxlength="30" placeholder="Bijv. Mijn SlimGeld"></div><div class="field"><label for="themeSelect">Thema</label><select id="themeSelect"><option value="green">Natuurlijk groen</option><option value="blue">Rustig blauw</option><option value="purple">Paars</option><option value="dark">Donkere modus</option><option value="system">Volg mijn apparaatinstelling</option></select></div><div class="field"><label for="currencySelect">Valuta</label><select id="currencySelect"><option value="EUR">Euro (€)</option><option value="USD">Amerikaanse dollar ($)</option><option value="GBP">Britse pond (£)</option></select></div><button class="btn primary" id="saveSettings">Instellingen opslaan</button></div>
+    <div class="card"><h3>🔐 Privacycentrum</h3><p class="card-sub">Je gegevens worden in deze versie op dit apparaat opgeslagen.</p><div class="notice">Er is geen account en er wordt geen bankrekening gekoppeld. Lokale gegevens kunnen verdwijnen wanneer je browsergegevens wist of een ander apparaat gebruikt.</div><hr><div class="list">
+      <div class="item"><div class="item-icon">📤</div><div class="item-main"><strong>Back-up maken</strong><small>Bewaar een JSON-bestand van je gegevens.</small></div><button class="btn outline smallbtn" id="backupData">Export</button></div>
+      <div class="item"><div class="item-icon">📥</div><div class="item-main"><strong>Back-up terugzetten</strong><small>Importeer eerder geëxporteerde SlimGeld-data.</small></div><button class="btn outline smallbtn" id="importData">Import</button><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div>
+      <div class="item"><div class="item-icon">🧹</div><div class="item-main"><strong>Alle gegevens verwijderen</strong><small>Verwijder lokaal opgeslagen SlimGeld-data.</small></div><button class="btn danger smallbtn" id="clearData">Verwijder</button></div>
+    </div></div>
+  </div>
+  <div class="section-head"><h3>Over SlimGeld</h3></div><div class="card"><p><strong>SlimGeld 2.0</strong> is een educatieve budget- en spaarplanner. Bedragen, grafieken en simulaties zijn gebaseerd op de informatie die je zelf invoert.</p><p class="muted small">SlimGeld is geen bank, geeft geen persoonlijk financieel advies en maakt geen echte betalingen. Houd rekening met de beveiliging van het apparaat waarop je de website gebruikt.</p><button class="btn outline" id="resetDemo">Voorbeeldgegevens toevoegen</button></div>
+</section>
+
+<footer class="footer">SlimGeld 2.0 · Slim leren omgaan met geld 💚<br>Je gegevens blijven in deze versie lokaal op je apparaat.</footer>
 </main>
+</div>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="active" data-page="home"><span>⌂</span>Home</button>
+  <button data-page="transactions"><span>↔</span>Transacties</button>
+  <button data-page="goals"><span>◎</span>Sparen</button>
+  <button data-page="learn"><span>▣</span>Leren</button>
+  <button data-page="settings"><span>⚙</span>Instellingen</button>
+</div>
 
 <script>
+"use strict";
 const $ = id => document.getElementById(id);
-const money = n => new Intl.NumberFormat('nl-NL',{
-  style:'currency',currency:'EUR'
-}).format(Number(n)||0);
+const KEY = "slimgeld_v2_data";
+const todayISO = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+};
+const defaultData = () => ({
+  transactions:[], goals:[], fixed:[], budget:0, challengeDays:[],
+  completedLessons:[], quizDays:[], xp:0, simScore:0, simPlayed:0,
+  simBest:0, settings:{name:"",theme:"green",currency:"EUR"}
+});
+let data = defaultData();
+let calDate = new Date();
+let tipIndex = new Date().getDate() % 10;
+let currentSim = null;
+let dailyAnswered = false;
+let randomAnswered = false;
 
-const today = new Date();
-const dateString = [
-  today.getFullYear(),
-  String(today.getMonth()+1).padStart(2,'0'),
-  String(today.getDate()).padStart(2,'0')
-].join('-');
-$('date').value = dateString;
-
-let transactions = JSON.parse(localStorage.getItem('sg_transactions')||'[]');
-let goals = JSON.parse(localStorage.getItem('sg_goals')||'[]');
-let subscriptions = JSON.parse(localStorage.getItem('sg_subscriptions')||'[]');
-let budget = JSON.parse(localStorage.getItem('sg_budget')||'null');
-
-function save(){
-  localStorage.setItem('sg_transactions',JSON.stringify(transactions));
-  localStorage.setItem('sg_goals',JSON.stringify(goals));
-  localStorage.setItem('sg_subscriptions',JSON.stringify(subscriptions));
-  localStorage.setItem('sg_budget',JSON.stringify(budget));
+function loadData(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      const defaults=defaultData();
+      data={...defaults,...parsed,settings:{...defaults.settings,...(parsed.settings||{})}};
+      if(!Array.isArray(data.transactions))data.transactions=[];
+      if(!Array.isArray(data.goals))data.goals=[];
+      if(!Array.isArray(data.fixed))data.fixed=[];
+    }
+  }catch(e){data=defaultData();console.warn("Lokale gegevens konden niet worden gelezen.",e)}
 }
-function safe(s){
-  return String(s).replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
+function saveData(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Opslaan is niet gelukt. Mogelijk is de browseropslag vol of uitgeschakeld.")}}
+function money(n){
+  const currency=data.settings.currency||"EUR";
+  try{return new Intl.NumberFormat("nl-NL",{style:"currency",currency,minimumFractionDigits:2}).format(Number(n)||0)}
+  catch(e){return "€ "+(Number(n)||0).toFixed(2)}
 }
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
-  window.scrollTo({top:0,behavior:'smooth'});
+function escapeHTML(s){
+  return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-document.querySelectorAll('nav button').forEach(b=>{
-  b.addEventListener('click',()=>showPage(b.dataset.page));
+function dateLabel(s){
+  if(!s)return "Geen datum";
+  const d=new Date(s+"T12:00:00");
+  return isNaN(d)?"Geen datum":d.toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"});
+}
+function monthKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`}
+function currentMonth(){return monthKey(new Date())}
+function txMonth(t){return String(t.date||"").slice(0,7)}
+function txsForMonth(m=currentMonth()){return data.transactions.filter(t=>txMonth(t)===m)}
+function totals(list){
+  return list.reduce((a,t)=>{if(t.type==="income")a.income+=Number(t.amount)||0;else a.expense+=Number(t.amount)||0;return a},{income:0,expense:0});
+}
+function sumGoals(){return data.goals.reduce((s,g)=>s+(Number(g.saved)||0),0)}
+function monthLabel(key){
+  const d=new Date(key+"-01T12:00:00");
+  return isNaN(d) ? key : d.toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function addXP(n){data.xp=(Number(data.xp)||0)+n;saveData();renderProgress()}
+function go(page){
+  const target=$("page-"+page);
+  if(!target)return;
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  target.classList.add("active");
+  document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  const labels={
+    home:["Goed bezig! 👋","Krijg grip op je geld, stap voor stap."],
+    transactions:["Inkomsten & uitgaven","Elke euro overzichtelijk bijgehouden."],
+    budget:["Budgetplanner","Plan je maand en bekijk je vaste kosten."],
+    goals:["Spaardoelen","Maak je plannen concreet."],
+    calendar:["Kalender & rekeningen","Zie wat er deze maand op je afkomt."],
+    stats:["Statistieken","Bekijk patronen in je inkomsten en uitgaven."],
+    challenges:["Challenges & badges","Kleine stappen, nieuwe vaardigheden."],
+    learn:["Geldacademie","Leer op jouw tempo."],
+    simulator:["Geldsimulator","Oefen met keuzes zonder echt geld."],
+    tips:["Bespaartips","Ontdek kleine manieren om slimmer te plannen."],
+    settings:["Instellingen & privacy","Beheer je voorkeuren en lokale gegevens."]
+  };
+  $("pageTitle").textContent=labels[page][0];
+  $("pageSubtitle").textContent=labels[page][1];
+  if(page==="stats")drawChart();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-page],[data-go]");
+  if(!b)return;
+  if(b.dataset.page)go(b.dataset.page);
+  else if(b.dataset.go)go(b.dataset.go);
 });
 
-$('theme').onclick=()=>{
-  document.body.classList.toggle('dark');
-  const dark=document.body.classList.contains('dark');
-  $('theme').textContent=dark?'☀️ Lichte modus':'🌙 Donkere modus';
-  localStorage.setItem('sg_dark',dark?'1':'0');
-};
-if(localStorage.getItem('sg_dark')==='1'){
-  document.body.classList.add('dark');
-  $('theme').textContent='☀️ Lichte modus';
+function renderHome(){
+  const tt=totals(txsForMonth());
+  $("homeBalance").textContent=money(tt.income-tt.expense);
+  $("homeIncome").textContent=money(tt.income);
+  $("homeExpense").textContent=money(tt.expense);
+  $("homeSavings").textContent=money(sumGoals());
+  $("homeBalance").className="stat-value "+(tt.income-tt.expense>=0?"positive":"negative");
+  const budget=Number(data.budget)||0, pct=budget?Math.min(100,tt.expense/budget*100):0;
+  $("homeBudgetText").textContent=`${money(tt.expense)} / ${money(budget)}`;
+  setProgress("homeBudgetBar",pct,tt.expense>budget?"danger":tt.expense>budget*.8?"warn":"");
+  $("homeBudgetMessage").textContent=!budget?"Stel je maandbudget in om je voortgang te zien.":tt.expense>budget?`Je zit ${money(tt.expense-budget)} boven je budget.`:`Je hebt nog ${money(budget-tt.expense)} van je budget over.`;
+  const cats=categoryTotals(txsForMonth().filter(t=>t.type==="expense"));
+  renderCategories("homeCategories",cats,4);
+  const recent=[...data.transactions].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,5);
+  $("homeRecent").innerHTML=recent.length?recent.map(transactionHTML).join(""):emptyHTML("🧾","Nog geen transacties","Voeg een inkomsten- of uitgavetransactie toe.");
+  bindDeleteButtons();
+  const upcoming=getUpcomingBills();
+  $("nextBill").textContent=upcoming.length?`${upcoming[0].name} · ${dateLabel(upcoming[0].date)}`:"Nog geen rekeningen";
+  const tip=tips[tipIndex%tips.length];
+  $("homeTipIcon").textContent=tip.icon;$("homeTipTitle").textContent=tip.title;$("homeTipText").textContent=tip.text;
 }
-
-function categoryIcon(c){
-  return ({
-    Boodschappen:'🛒',Vervoer:'🚌',Hobby:'🎮',
-    Kleding:'👕',Abonnementen:'📱',School:'📚',
-    Wonen:'🏠',Overig:'🧾'
-  })[c]||'💶';
+function setProgress(id,pct,kind=""){
+  const el=$(id);if(!el)return;
+  el.classList.remove("warn","danger");if(kind)el.classList.add(kind);
+  const span=el.querySelector("span");if(span)span.style.width=Math.max(0,Math.min(100,pct))+"%";
 }
-
+function categoryTotals(list){
+  const result={};
+  list.forEach(t=>{const c=t.category||"Overig";result[c]=(result[c]||0)+(Number(t.amount)||0)});
+  return Object.entries(result).sort((a,b)=>b[1]-a[1]);
+}
+function renderCategories(id,cats,limit=20){
+  const el=$(id);
+  if(!cats.length){el.innerHTML=emptyHTML("📊","Nog geen uitgaven","Voeg uitgaven toe om je categorieën te zien.");return}
+  const max=cats[0][1]||1;
+  el.innerHTML=cats.slice(0,limit).map(([name,amount])=>`<div class="category-row"><span>${escapeHTML(name)}</span><div class="progress"><span style="width:${Math.max(2,amount/max*100)}%"></span></div><strong style="text-align:right">${money(amount)}</strong></div>`).join("");
+}
+function emptyHTML(icon,title,desc){return `<div class="empty"><span>${icon}</span><strong>${escapeHTML(title)}</strong><p>${escapeHTML(desc)}</p></div>`}
+function transactionHTML(t){
+  const income=t.type==="income";
+  return `<div class="item"><div class="item-icon">${income?"↗️":"↘️"}</div><div class="item-main"><strong>${escapeHTML(t.name)}</strong><small>${escapeHTML(t.category||"Overig")} · ${dateLabel(t.date)}</small></div><div class="item-value ${income?"positive":"negative"}">${income?"+":"−"}${money(t.amount)}</div><button class="btn outline smallbtn" data-delete-tx="${escapeHTML(t.id)}" aria-label="Verwijder transactie">✕</button></div>`;
+}
+function bindDeleteButtons(){
+  document.querySelectorAll("[data-delete-tx]").forEach(b=>b.onclick=()=>{
+    if(!confirm("Deze transactie verwijderen?"))return;
+    data.transactions=data.transactions.filter(t=>t.id!==b.dataset.deleteTx);saveData();renderAll();
+  });
+}
 function renderTransactions(){
-  const month=dateString.slice(0,7);
-  const current=transactions.filter(t=>t.date.startsWith(month));
-  const income=current.filter(t=>t.type==='income').reduce((a,t)=>a+t.amount,0);
-  const expense=current.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
-  $('income').textContent=money(income);
-  $('expenses').textContent=money(expense);
-  $('remaining').textContent=money(income-expense);
-
-  const sorted=[...transactions].sort((a,b)=>b.date.localeCompare(a.date));
-  const html=t=>`<div class="item">
-    <strong>${t.type==='income'?'+':'−'}${money(t.amount)}</strong>
-    · ${safe(t.description)}
-    <div class="muted">${safe(t.category)} · ${safe(t.date)}</div>
-    <button class="danger" onclick="removeTransaction('${t.id}')">Verwijderen</button>
-  </div>`;
-  $('allTransactions').innerHTML=sorted.length?sorted.map(html).join(''):'Nog geen transacties.';
-  $('recent').innerHTML=sorted.length?sorted.slice(0,4).map(html).join(''):'Nog geen transacties.';
-
-  const categories={};
-  current.filter(t=>t.type==='expense').forEach(t=>{
-    categories[t.category]=(categories[t.category]||0)+t.amount;
-  });
-  const entries=Object.entries(categories).sort((a,b)=>b[1]-a[1]);
-  const max=Math.max(1,...entries.map(x=>x[1]));
-  $('categories').innerHTML=entries.length?entries.map(([name,value])=>`
-    <div class="item">
-      <div>${categoryIcon(name)} ${safe(name)} — ${money(value)}</div>
-      <div class="progress"><div style="width:${value/max*100}%"></div></div>
-    </div>`).join(''):'Voeg een uitgave toe om je overzicht te bekijken.';
+  const search=($("txSearch").value||"").toLowerCase();
+  const filter=$("txFilter").value,month=$("txMonth").value;
+  const months=[...new Set(data.transactions.map(txMonth).filter(Boolean))].sort().reverse();
+  const sel=$("txMonth");const prev=sel.value;
+  sel.innerHTML='<option value="all">Alle maanden</option>'+months.map(m=>`<option value="${m}">${escapeHTML(monthLabel(m))}</option>`).join("");
+  sel.value=months.includes(prev)?prev:"all";
+  const list=[...data.transactions].filter(t=>(!search||String(t.name).toLowerCase().includes(search)||String(t.category).toLowerCase().includes(search))&&(filter==="all"||t.type===filter)&&(sel.value==="all"||txMonth(t)===sel.value)).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  $("txCount").textContent=`${list.length} transactie${list.length===1?"":"s"}`;
+  $("transactionList").innerHTML=list.length?list.map(transactionHTML).join(""):emptyHTML("🧾","Geen transacties gevonden","Pas je zoekopdracht aan of voeg een transactie toe.");
+  bindDeleteButtons();
 }
-$('transactionForm').onsubmit=e=>{
+$("transactionForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const amount=Number($('amount').value);
-  if(amount<=0)return;
-  transactions.push({
-    id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),
-    type:$('type').value,amount,
-    description:$('description').value.trim(),
-    category:$('category').value,date:$('date').value
-  });
-  save();e.target.reset();$('date').value=dateString;
-  renderAll();
+  const amount=Number($("txAmount").value);
+  if(!Number.isFinite(amount)||amount<=0){alert("Vul een bedrag groter dan nul in.");return}
+  data.transactions.push({id:uid(),type:$("txType").value,amount,name:$("txName").value.trim(),category:$("txCategory").value,date:$("txDate").value||todayISO()});
+  saveData();e.target.reset();$("txDate").value=todayISO();renderAll();addXP(2);
+});
+["txSearch","txFilter","txMonth"].forEach(id=>$(id).addEventListener(id==="txSearch"?"input":"change",renderTransactions));
+$("exportCsv").onclick=()=>{
+  const rows=[["Datum","Type","Omschrijving","Categorie","Bedrag"],...data.transactions.map(t=>[t.date,t.type,t.name,t.category,t.amount])];
+  const csv="\uFEFF"+rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\r\n");
+  downloadFile(csv,"slimgeld-transacties.csv","text/csv;charset=utf-8");
 };
-function removeTransaction(id){
-  transactions=transactions.filter(t=>t.id!==id);
-  save();renderAll();
-}
-function clearTransactions(){
-  if(confirm('Weet je zeker dat je alle transacties wilt wissen?')){
-    transactions=[];save();renderAll();
-  }
-}
-function downloadCSV(){
-  const rows=[['Soort','Bedrag','Omschrijving','Categorie','Datum'],
-    ...transactions.map(t=>[t.type,t.amount,t.description,t.category,t.date])];
-  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');
-  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='slimgeld.csv';a.click();
-  URL.revokeObjectURL(url);
+function downloadFile(content,name,type){
+  const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-$('goalForm').onsubmit=e=>{
+$("budgetForm").addEventListener("submit",e=>{
+  e.preventDefault();const n=Number($("budgetAmount").value);
+  if(!Number.isFinite(n)||n<0){alert("Vul een geldig budget in.");return}
+  data.budget=n;saveData();renderAll();addXP(2);
+});
+function renderBudget(){
+  $("budgetAmount").value=data.budget||"";
+  const spent=totals(txsForMonth()).expense,budget=Number(data.budget)||0;
+  $("budgetSpent").textContent=money(spent);
+  setProgress("budgetProgress",budget?spent/budget*100:0,spent>budget&&budget?"danger":spent>budget*.8&&budget?"warn":"");
+  $("budgetAdvice").textContent=!budget?"Stel hierboven je budget in.":spent>budget?`Je hebt je budget met ${money(spent-budget)} overschreden. Bekijk je uitgaven om te leren waar je kunt bijsturen.`:`Je hebt nog ${money(budget-spent)} beschikbaar.`;
+  const total=data.fixed.reduce((s,f)=>s+Number(f.amount||0),0);
+  $("fixedTotal").textContent=money(total)+" / maand";$("subscriptionTotal").textContent=money(total);
+  $("fixedList").innerHTML=data.fixed.length?data.fixed.map(f=>`<div class="item"><div class="item-icon">🔁</div><div class="item-main"><strong>${escapeHTML(f.name)}</strong><small>${escapeHTML(f.category)} · iedere maand rond dag ${f.day}</small></div><div class="item-value">${money(f.amount)}</div><button class="btn outline smallbtn" data-delete-fixed="${escapeHTML(f.id)}">✕</button></div>`).join(""):emptyHTML("📅","Nog geen vaste kosten","Voeg hierboven terugkerende kosten toe.");
+  document.querySelectorAll("[data-delete-fixed]").forEach(b=>b.onclick=()=>{if(confirm("Deze vaste kosten verwijderen?")){data.fixed=data.fixed.filter(f=>f.id!==b.dataset.deleteFixed);saveData();renderAll()}});
+}
+$("fixedCostForm").addEventListener("submit",e=>{
+  e.preventDefault();const amount=Number($("fixedAmount").value),day=Number($("fixedDay").value);
+  if(amount<=0||day<1||day>28){alert("Vul een geldig bedrag en een dag tussen 1 en 28 in.");return}
+  data.fixed.push({id:uid(),name:$("fixedName").value.trim(),amount,day,category:$("fixedCategory").value});
+  saveData();e.target.reset();$("fixedDay").value=1;renderAll();addXP(2);
+});
+
+$("goalForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const target=Number($('goalTarget').value);
-  const saved=Number($('goalSaved').value);
-  if(target<=0||saved<0)return;
-  goals.push({id:Date.now(),name:$('goalName').value.trim(),target,saved:Math.min(target,saved)});
-  save();e.target.reset();$('goalSaved').value=0;renderGoals();
-};
+  const target=Number($("goalTarget").value),saved=Number($("goalSaved").value);
+  if(target<=0||saved<0){alert("Controleer de bedragen.");return}
+  data.goals.push({id:uid(),name:$("goalName").value.trim(),target,saved,date:$("goalDate").value||""});
+  saveData();e.target.reset();$("goalSaved").value=0;renderAll();addXP(3);
+});
 function renderGoals(){
-  const goalHTML=g=>{
-    const percent=Math.min(100,Math.round(g.saved/g.target*100));
-    return `<div class="item">
-      <strong>🎯 ${safe(g.name)}</strong>
-      <div class="progress"><div style="width:${percent}%"></div></div>
-      ${money(g.saved)} van ${money(g.target)} (${percent}%)
-      <form onsubmit="addSavings(event,${g.id})" style="margin-top:10px">
-        <input type="number" name="amount" min="0.01" step="0.01" placeholder="Extra gespaard (€)" required>
-        <button type="submit">Voeg spaargeld toe</button>
-      </form>
-      <button class="danger" onclick="removeGoal(${g.id})">Verwijderen</button>
-    </div>`;
-  };
-  $('allGoals').innerHTML=goals.length?goals.map(goalHTML).join(''):'Je hebt nog geen spaardoelen.';
-  $('homeGoals').innerHTML=goals.length?goals.slice(0,3).map(g=>
-    `<div class="item"><strong>${safe(g.name)}</strong>
-    <div class="progress"><div style="width:${Math.min(100,g.saved/g.target*100)}%"></div></div>
-    ${money(g.saved)} / ${money(g.target)}</div>`
-  ).join(''):'Je hebt nog geen spaardoelen.';
+  $("goalCount").textContent=`${data.goals.length} doel${data.goals.length===1?"":"en"}`;
+  $("goalsList").innerHTML=data.goals.length?data.goals.map(g=>{
+    const pct=Math.min(100,Number(g.saved)/Math.max(1,Number(g.target))*100);
+    return `<div class="card"><div class="row-between"><div class="item-icon">🎯</div><span class="pill">${Math.round(pct)}% behaald</span></div><h3 style="margin-top:15px">${escapeHTML(g.name)}</h3><div class="row-between"><strong>${money(g.saved)}</strong><span class="muted small">van ${money(g.target)}</span></div><div class="progress" style="margin:11px 0"><span style="width:${pct}%"></span></div><p class="muted small">${g.date?"Streefdatum: "+dateLabel(g.date):"Geen streefdatum ingesteld"}${pct>=100?" · 🎉 Doel bereikt!":""}</p><div class="form-row"><div class="field"><label for="addsave-${g.id}">Bedrag toevoegen (€)</label><input id="addsave-${g.id}" type="number" min="0.01" step="0.01" placeholder="10,00"></div><div style="display:flex;align-items:end;padding-bottom:13px"><button class="btn primary" data-add-save="${g.id}">+ Sparen</button></div></div><button class="btn outline smallbtn" data-delete-goal="${g.id}">Doel verwijderen</button></div>`;
+  }).join(""):emptyHTML("🐷","Nog geen spaardoelen","Maak een doel aan, bijvoorbeeld voor een fiets, game of vakantie.");
+  document.querySelectorAll("[data-add-save]").forEach(b=>b.onclick=()=>{
+    const input=$("addsave-"+b.dataset.addSave),n=Number(input.value);
+    if(n<=0){alert("Vul een bedrag groter dan nul in.");return}
+    const g=data.goals.find(x=>x.id===b.dataset.addSave);if(!g)return;
+    g.saved=(Number(g.saved)||0)+n;saveData();renderAll();addXP(3);
+  });
+  document.querySelectorAll("[data-delete-goal]").forEach(b=>b.onclick=()=>{if(confirm("Dit spaardoel verwijderen?")){data.goals=data.goals.filter(g=>g.id!==b.dataset.deleteGoal);saveData();renderAll()}});
 }
-function addSavings(e,id){
-  e.preventDefault();
-  const amount=Number(new FormData(e.target).get('amount'));
-  const goal=goals.find(g=>g.id===id);
-  if(goal&&amount>0)goal.saved=Math.min(goal.target,goal.saved+amount);
-  save();renderGoals();
-}
-function removeGoal(id){
-  goals=goals.filter(g=>g.id!==id);save();renderGoals();
-}
-function updateWeekly(){
-  const amount=Number($('weekly').value)||0;
-  $('weeklyResult').textContent=`In een jaar spaar je ${money(amount*52)}. Gemiddeld is dat ${money(amount*52/12)} per maand.`;
-}
-$('weekly').oninput=updateWeekly;
-
-$('budgetForm').onsubmit=e=>{e.preventDefault();calculateBudget();};
-function calculateBudget(){
-  const income=Number($('bIncome').value)||0;
-  const needs=Number($('bNeeds').value)||0;
-  const wants=Number($('bWants').value)||0;
-  const saving=Number($('bSave').value)||0;
-  budget={income,needs,wants,saving};save();
-  const left=income-needs-wants-saving;
-  $('budgetResult').innerHTML=`
-    <div class="big">${money(left)}</div>
-    <p>${left<0?'Je geplande uitgaven zijn hoger dan je inkomsten.':'Dit bedrag blijft over na je geplande bedragen.'}</p>
-    <div class="item">Noodzakelijk: ${money(needs)} (${income?Math.round(needs/income*100):0}%)</div>
-    <div class="item">Leuke dingen: ${money(wants)} (${income?Math.round(wants/income*100):0}%)</div>
-    <div class="item">Sparen: ${money(saving)} (${income?Math.round(saving/income*100):0}%)</div>`;
-}
-function loadBudget(){
-  if(!budget)return;
-  $('bIncome').value=budget.income;$('bNeeds').value=budget.needs;
-  $('bWants').value=budget.wants;$('bSave').value=budget.saving;
-  calculateBudget();
-}
-function calculateMonthly(){
-  $('yearCost').textContent=money((Number($('monthlyCost').value)||0)*(Number($('months').value)||0));
-}
-$('monthlyCost').oninput=calculateMonthly;
-$('months').oninput=calculateMonthly;
-
-$('subscriptionForm').onsubmit=e=>{
-  e.preventDefault();
-  const price=Number($('subPrice').value);
-  if(price<=0)return;
-  subscriptions.push({id:Date.now(),name:$('subName').value.trim(),price});
-  save();e.target.reset();renderSubscriptions();
+$("calculatePurchase").onclick=()=>{
+  const name=$("purchaseName").value.trim()||"Je aankoop",price=Number($("purchasePrice").value),current=Number($("purchaseCurrent").value)||0,weekly=Number($("purchaseWeekly").value);
+  const el=$("purchaseResult");el.classList.remove("hidden");
+  if(price<=0||weekly<=0||current<0){el.textContent="Vul een geldige prijs, huidig spaarbedrag en weekspaarbedrag in.";return}
+  const remaining=Math.max(0,price-current),weeks=Math.ceil(remaining/weekly);
+  el.innerHTML=`<strong>Jouw plan voor ${escapeHTML(name)}</strong><br>${remaining===0?"Je hebt al genoeg gespaard!":`Je hebt nog ${money(remaining)} nodig. Als je ${money(weekly)} per week spaart, duurt het ongeveer ${weeks} week${weeks===1?"":"en"}.`}<br><span class="muted">Dit is een eenvoudige berekening zonder rente of onverwachte uitgaven.</span>`;
 };
-function renderSubscriptions(){
-  $('subscriptions').innerHTML=subscriptions.length?subscriptions.map(s=>`
-    <div class="item"><strong>${safe(s.name)}</strong>
-    <p>${money(s.price)} per maand · ${money(s.price*12)} per jaar</p>
-    <button class="danger" onclick="removeSubscription(${s.id})">Verwijderen</button></div>
-  `).join(''):'<p class="muted">Nog geen abonnementen toegevoegd.</p>';
-  $('subTotal').textContent=money(subscriptions.reduce((a,s)=>a+s.price,0)*12)+' per jaar';
+
+function getUpcomingBills(){
+  const now=new Date();now.setHours(0,0,0,0);
+  return data.fixed.map(f=>{
+    let d=new Date(now.getFullYear(),now.getMonth(),Math.min(28,Math.max(1,Number(f.day)||1)),12);
+    if(d<now)d=new Date(now.getFullYear(),now.getMonth()+1,Math.min(28,Math.max(1,Number(f.day)||1)),12);
+    return {...f,date:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+  }).sort((a,b)=>a.date.localeCompare(b.date));
 }
-function removeSubscription(id){
-  subscriptions=subscriptions.filter(s=>s.id!==id);
-  save();renderSubscriptions();
+$("prevMonth").onclick=()=>{calDate.setMonth(calDate.getMonth()-1);renderCalendar()};
+$("nextMonth").onclick=()=>{calDate.setMonth(calDate.getMonth()+1);renderCalendar()};
+function renderCalendar(){
+  $("calendarMonth").textContent=calDate.toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
+  const y=calDate.getFullYear(),m=calDate.getMonth(),first=new Date(y,m,1),start=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+  const prevDays=new Date(y,m,0).getDate();let html=["Ma","Di","Wo","Do","Vr","Za","Zo"].map(d=>`<div class="day-name">${d}</div>`).join("");
+  const events={};
+  data.fixed.forEach(f=>{const day=Math.min(days,Math.max(1,Number(f.day)||1));(events[day]??=[]).push({name:f.name,type:"fixed",amount:f.amount})});
+  data.transactions.filter(t=>txMonth(t)===monthKey(first)).forEach(t=>{const day=Number(t.date.slice(8,10));if(t.type==="expense")(events[day]??=[]).push({name:t.name,type:"expense",amount:t.amount})});
+  for(let i=0;i<42;i++){
+    let day,cls="",actualMonth=m;
+    if(i<start){day=prevDays-start+i+1;cls="muted-day";actualMonth=m-1}
+    else if(i>=start+days){day=i-start-days+1;cls="muted-day";actualMonth=m+1}
+    else day=i-start+1;
+    const realDate=new Date(y,actualMonth,day);
+    const isToday=realDate.toDateString()===new Date().toDateString();
+    if(isToday)cls+=" today";
+    const ev=actualMonth===m?(events[day]||[]):[];
+    html+=`<div class="day ${cls}"><span class="day-number">${day}</span>${ev.slice(0,2).map(e=>`<span class="day-event ${e.type==="expense"?"expense":""}" title="${escapeHTML(e.name)}">${escapeHTML(e.name)}</span>`).join("")}${ev.length>2?`<span class="day-event">+${ev.length-2} meer</span>`:""}</div>`;
+  }
+  $("calendarGrid").innerHTML=html;
+  const upcoming=getUpcomingBills();
+  $("upcomingBills").innerHTML=upcoming.length?upcoming.map(f=>`<div class="item"><div class="item-icon">📅</div><div class="item-main"><strong>${escapeHTML(f.name)}</strong><small>${escapeHTML(f.category)} · Vervaldatum ${dateLabel(f.date)}</small></div><div class="item-value">${money(f.amount)}</div></div>`).join(""):emptyHTML("📭","Geen komende rekeningen","Voeg vaste kosten toe in de budgetplanner.");
 }
 
-const questions=[
-  {q:'Wat is een budget?',a:['Een plan voor inkomsten en uitgaven','Een bankpas','Een korting'],c:0,why:'Een budget helpt je inkomsten en uitgaven te plannen.'},
-  {q:'Je geeft €8 per week uit. Hoeveel is dat in 52 weken?',a:['€96','€416','€800'],c:1,why:'€8 × 52 = €416.'},
-  {q:'Waarom kan een boodschappenlijst helpen?',a:['Je plant wat je nodig hebt','Je koopt altijd meer','Je hoeft nooit prijzen te vergelijken'],c:0,why:'Een lijst helpt je gericht boodschappen te doen.'},
-  {q:'Wat is een spaardoel?',a:['Een doelbedrag waarvoor je spaart','Een soort belasting','Een abonnement'],c:0,why:'Een spaardoel geeft je sparen een duidelijk doel.'},
-  {q:'Wat kun je doen vóór een niet-noodzakelijke aankoop?',a:['Altijd meteen kopen','Even nadenken en prijzen vergelijken','Zonder plan geld lenen'],c:1,why:'Even nadenken helpt je bewuste keuzes te maken.'}
-];
-let questionIndex=0,score=0,answered=false;
-function renderQuestion(){
-  answered=false;
-  const q=questions[questionIndex];
-  $('question').innerHTML=`<p class="muted">Vraag ${questionIndex+1} van ${questions.length}</p><h2>${q.q}</h2>`;
-  $('answers').innerHTML=q.a.map((a,i)=>`<button class="answer" data-answer="${i}">${String.fromCharCode(65+i)}. ${a}</button>`).join('');
-  $('feedback').textContent='';
-  $('next').disabled=true;
-  document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{
-    if(answered)return;answered=true;
-    const chosen=Number(b.dataset.answer);
-    if(chosen===q.c){score++;b.style.background='#ccebd6';}
-    else{b.style.background='#f6d7ce';document.querySelectorAll('[data-answer]')[q.c].style.background='#ccebd6';}
-    $('feedback').textContent=(chosen===q.c?'Goed gedaan! ':'Niet helemaal. ')+q.why;
-    document.querySelectorAll('[data-answer]').forEach(x=>x.disabled=true);
-    $('next').disabled=false;
+function renderStats(){
+  const month=txsForMonth(),expenses=month.filter(t=>t.type==="expense"),income=month.filter(t=>t.type==="income");
+  const totalE=expenses.reduce((s,t)=>s+Number(t.amount),0),totalI=income.reduce((s,t)=>s+Number(t.amount),0);
+  $("avgExpense").textContent=money(expenses.length?totalE/expenses.length:0);
+  const cats=categoryTotals(expenses);$("topCategory").textContent=cats.length?cats[0][0]:"—";
+  $("saveRate").textContent=totalI?Math.round((totalI-totalE)/totalI*100)+"%":"0%";
+  $("allCount").textContent=data.transactions.length;
+  renderCategories("statsCategories",cats);
+  const months=[];
+  for(let i=5;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);const k=monthKey(d);months.push({key:k,...totals(txsForMonth(k))})}
+  $("monthComparison").innerHTML=months.map(m=>`<div class="item"><div class="item-main"><strong>${escapeHTML(monthLabel(m.key))}</strong><small>Saldo: ${money(m.income-m.expense)}</small></div><div class="item-value"><span class="positive">+${money(m.income)}</span><br><span class="negative">−${money(m.expense)}</span></div></div>`).join("");
+  drawChart(months);
+}
+function drawChart(months){
+  const canvas=$("monthlyChart");if(!canvas||!canvas.getContext)return;
+  const ctx=canvas.getContext("2d");if(!ctx)return;
+  const rect=canvas.getBoundingClientRect();if(rect.width<1)return;
+  const ratio=window.devicePixelRatio||1,w=rect.width,h=220;
+  canvas.width=w*ratio;canvas.height=h*ratio;ctx.setTransform(ratio,0,0,ratio,0,0);
+  ctx.clearRect(0,0,w,h);
+  const list=months||Array.from({length:6},(_,i)=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-(5-i));const key=monthKey(d);return {key,...totals(txsForMonth(key))}});
+  const max=Math.max(1,...list.flatMap(x=>[x.income,x.expense]));
+  const pad={left:8,right:8,top:16,bottom:32};const plotW=w-pad.left-pad.right,plotH=h-pad.top-pad.bottom;
+  const styles=getComputedStyle(document.body),text=styles.getPropertyValue("--muted").trim(),border=styles.getPropertyValue("--border").trim();
+  ctx.font="10px system-ui";ctx.fillStyle=text;ctx.strokeStyle=border;ctx.lineWidth=1;
+  for(let i=0;i<4;i++){const y=pad.top+i*plotH/3;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(w-pad.right,y);ctx.stroke()}
+  const groupW=plotW/list.length,bw=Math.min(17,groupW*.26);
+  list.forEach((v,i)=>{
+    const x=pad.left+i*groupW+groupW/2;
+    const hi=v.income/max*(plotH-5),he=v.expense/max*(plotH-5);
+    ctx.fillStyle="#218568";ctx.fillRect(x-bw-2,pad.top+plotH-hi,bw,hi);
+    ctx.fillStyle="#d96767";ctx.fillRect(x+2,pad.top+plotH-he,bw,he);
+    const d=new Date(v.key+"-01T12:00:00");ctx.fillStyle=text;ctx.textAlign="center";ctx.fillText(d.toLocaleDateString("nl-NL",{month:"short"}),x,h-10);
   });
 }
-$('next').onclick=()=>{
-  if(!answered)return;
-  if(questionIndex<questions.length-1){questionIndex++;renderQuestion();}
-  else{
-    $('question').innerHTML=`<h2>Je score: ${score} van ${questions.length}!</h2>`;
-    $('answers').innerHTML='<p>Goed bezig! Je kunt de quiz opnieuw doen om verder te oefenen.</p>';
-    $('feedback').textContent='';$('next').disabled=true;
-  }
-};
-$('restart').onclick=()=>{questionIndex=0;score=0;renderQuestion();};
+window.addEventListener("resize",()=>{if($("page-stats").classList.contains("active"))drawChart()});
 
 const tips=[
-  'Vergelijk prijzen per kilo of liter.',
-  'Denk 24 uur na over niet-noodzakelijke aankopen.',
-  'Bekijk eens per maand welke abonnementen je gebruikt.',
-  'Maak een boodschappenlijst voordat je naar de winkel gaat.',
-  'Begin met een spaardoel dat haalbaar voelt.',
-  'Bekijk je uitgaven regelmatig om patronen te herkennen.'
+ {icon:"📝",title:"Schrijf je uitgaven op",text:"Een overzicht helpt je ontdekken waar je geld naartoe gaat."},
+ {icon:"🎯",title:"Geef je spaardoel een naam",text:"Een concreet doel maakt sparen overzichtelijker."},
+ {icon:"🛒",title:"Maak een boodschappenlijst",text:"Een lijst helpt je gerichter winkelen en impulsaankopen beperken."},
+ {icon:"⏳",title:"Wacht even met kopen",text:"Geef jezelf bedenktijd bij een niet-noodzakelijke aankoop."},
+ {icon:"🔁",title:"Controleer abonnementen",text:"Bekijk regelmatig of je terugkerende abonnementen nog gebruikt."},
+ {icon:"💶",title:"Spaar een haalbaar bedrag",text:"Een klein, regelmatig bedrag kan beter passen dan een te ambitieus doel."},
+ {icon:"📅",title:"Plan vooruit",text:"Noteer verwachte kosten zodat ze minder snel als verrassing komen."},
+ {icon:"🧠",title:"Vergelijk prijzen",text:"Vergelijk totale prijzen en kwaliteit, niet alleen kortingen."},
+ {icon:"🔒",title:"Bescherm je gegevens",text:"Deel nooit wachtwoorden, pincodes of verificatiecodes."},
+ {icon:"🤝",title:"Vraag hulp bij twijfel",text:"Bespreek grote financiële beslissingen met iemand die je vertrouwt."}
 ];
-$('dailyTip').textContent=tips[Math.floor(Date.now()/86400000)%tips.length];
+function renderTips(){
+  const t=tips[tipIndex%tips.length];$("tipOfDay").textContent=t.text;
+  $("tipsGrid").innerHTML=tips.map(x=>`<div class="card"><div style="font-size:27px;margin-bottom:10px">${x.icon}</div><h3>${escapeHTML(x.title)}</h3><p class="muted small">${escapeHTML(x.text)}</p></div>`).join("");
+}
+$("nextTip").onclick=()=>{tipIndex=(tipIndex+1)%tips.length;renderTips();};
+const lessons=[
+ {title:"De basis van budgetteren",desc:"Leer inkomsten, uitgaven en je saldo begrijpen.",content:"Een budget is een plan voor je geld. Tel je verwachte inkomsten op, noteer je uitgaven en kijk wat overblijft. Maak onderscheid tussen noodzakelijke kosten en dingen die je graag wilt.",question:"Wat is een budget?",answers:["Een plan voor je inkomsten en uitgaven","Een soort bankrekening","Een garantie dat je rijk wordt"],correct:0},
+ {title:"Slim sparen",desc:"Maak een doel en kies een haalbaar bedrag.",content:"Een spaardoel heeft een bedrag en liefst een streefdatum. Deel het bedrag dat je nog nodig hebt door het aantal weken dat je hebt. Zo kun je beoordelen of je plan haalbaar is.",question:"Je hebt nog €60 nodig en spaart €10 per week. Hoeveel weken duurt dat ongeveer?",answers:["3 weken","6 weken","10 weken"],correct:1},
+ {title:"Behoefte of wens?",desc:"Leer het verschil tussen nodig hebben en graag willen.",content:"Een behoefte is iets wat je nodig hebt, zoals eten. Een wens is iets wat je graag wilt, zoals een extra game. Het onderscheid kan helpen bij het maken van keuzes; wensen zijn niet verkeerd, maar je budget heeft grenzen.",question:"Wat is meestal een wens?",answers:["Drinkwater","Een extra game die je graag wilt","Een noodzakelijke rekening"],correct:1},
+ {title:"Reclame en impulsaankopen",desc:"Herken aanbiedingen en koopprikkels.",content:"Een aanbieding is niet automatisch voordelig als je het product niet nodig hebt. Kijk naar de totale prijs, vergelijk alternatieven en geef jezelf bedenktijd bij niet-noodzakelijke aankopen.",question:"Een product is afgeprijsd, maar je hebt het niet nodig. Wat is verstandig?",answers:["Altijd kopen, want het is goedkoper","Eerst nadenken of het in je budget past","Meer kopen om korting te krijgen"],correct:1},
+ {title:"Veilig omgaan met geld",desc:"Herken verdachte berichten en bescherm je gegevens.",content:"Deel nooit je pincode, wachtwoord of verificatiecode. Wees voorzichtig met berichten die je onder druk zetten om snel te betalen. Controleer verdachte verzoeken via een officieel kanaal en vraag hulp als je twijfelt.",question:"Iemand vraagt om je bankverificatiecode. Wat doe je?",answers:["De code sturen als die aardig klinkt","De code niet delen en het verzoek controleren","De code online plaatsen"],correct:1}
+];
+function renderLessons(){
+  $("courseList").innerHTML=lessons.map((l,i)=>{
+    const done=data.completedLessons.includes(i);
+    return `<div class="lesson"><div class="lesson-num">${done?"✓":i+1}</div><div class="lesson-content"><strong>${escapeHTML(l.title)}</strong><p>${escapeHTML(l.desc)}</p></div><button class="btn ${done?"soft":"primary"} smallbtn" data-lesson="${i}">${done?"Herhaal":"Start les"}</button></div>`;
+  }).join("");
+  document.querySelectorAll("[data-lesson]").forEach(b=>b.onclick=()=>openLesson(Number(b.dataset.lesson)));
+  const done=data.completedLessons.length;
+  $("learningProgress").innerHTML=`<div class="row-between"><strong>${done} van ${lessons.length} lessen voltooid</strong><span class="pill">${Math.round(done/lessons.length*100)}%</span></div><div class="progress" style="margin-top:12px"><span style="width:${done/lessons.length*100}%"></span></div>`;
+}
+function openLesson(i){
+  const l=lessons[i];if(!l)return;
+  const old=$("courseList");
+  old.innerHTML=`<button class="btn outline smallbtn" id="backLessons">← Alle lessen</button><h3 style="margin-top:18px">${escapeHTML(l.title)}</h3><p>${escapeHTML(l.content)}</p><hr><strong>${escapeHTML(l.question)}</strong><div id="lessonAnswers">${l.answers.map((a,j)=>`<button class="quiz-option" data-lesson-answer="${j}">${escapeHTML(a)}</button>`).join("")}</div><div id="lessonFeedback"></div>`;
+  $("backLessons").onclick=renderLessons;
+  document.querySelectorAll("[data-lesson-answer]").forEach(b=>b.onclick=()=>{
+    const correct=Number(b.dataset.lessonAnswer)===l.correct;
+    document.querySelectorAll("[data-lesson-answer]").forEach(x=>{x.disabled=true;if(Number(x.dataset.lessonAnswer)===l.correct)x.classList.add("correct");else if(x===b)x.classList.add("incorrect")});
+    $("lessonFeedback").innerHTML=`<div class="notice" style="margin-top:12px">${correct?"Goed gedaan! +10 XP.":"Dat is niet het juiste antwoord. Bekijk de uitleg nog eens."} ${correct?"":escapeHTML(l.content)}</div>`;
+    if(correct&&!data.completedLessons.includes(i)){data.completedLessons.push(i);addXP(10)}
+    saveData();renderProgress();
+  });
+}
+function dailyQuestion(){
+  const dayIndex=Math.floor(new Date().setHours(0,0,0,0)/86400000)%lessons.length;
+  return {...lessons[dayIndex],index:dayIndex};
+}
+function renderDailyQuiz(){
+  const q=dailyQuestion(),already=data.quizDays.includes(todayISO());
+  dailyAnswered=already;
+  $("dailyDate").textContent="Vraag van "+dateLabel(todayISO());
+  if(already){$("dailyQuiz").innerHTML='<div class="notice">✅ Je hebt de dagelijkse geldvraag vandaag al beantwoord. Kom morgen terug voor een nieuwe vraag!</div>';return}
+  $("dailyQuiz").innerHTML=`<strong>${escapeHTML(q.question)}</strong><div>${q.answers.map((a,i)=>`<button class="quiz-option" data-daily-answer="${i}">${escapeHTML(a)}</button>`).join("")}</div><div id="dailyFeedback"></div>`;
+  document.querySelectorAll("[data-daily-answer]").forEach(b=>b.onclick=()=>{
+    if(dailyAnswered)return;dailyAnswered=true;
+    const correct=Number(b.dataset.dailyAnswer)===q.correct;
+    document.querySelectorAll("[data-daily-answer]").forEach(x=>{x.disabled=true;if(Number(x.dataset.dailyAnswer)===q.correct)x.classList.add("correct");else if(x===b)x.classList.add("incorrect")});
+    $("dailyFeedback").innerHTML=`<div class="notice">${correct?"Goed gedaan! Je verdient 5 XP.":"Geen probleem. "+escapeHTML(q.content)}</div>`;
+    data.quizDays.push(todayISO());if(correct)addXP(5);saveData();renderProgress();
+  });
+}
+$("randomQuiz").onclick=()=>{
+  randomAnswered=false;const q=lessons[Math.floor(Math.random()*lessons.length)];
+  $("randomQuizArea").innerHTML=`<strong>${escapeHTML(q.question)}</strong>${q.answers.map((a,i)=>`<button class="quiz-option" data-random-answer="${i}">${escapeHTML(a)}</button>`).join("")}<div id="randomFeedback"></div>`;
+  document.querySelectorAll("[data-random-answer]").forEach(b=>b.onclick=()=>{
+    if(randomAnswered)return;randomAnswered=true;
+    const correct=Number(b.dataset.randomAnswer)===q.correct;
+    document.querySelectorAll("[data-random-answer]").forEach(x=>{x.disabled=true;if(Number(x.dataset.randomAnswer)===q.correct)x.classList.add("correct");else if(x===b)x.classList.add("incorrect")});
+    $("randomFeedback").innerHTML=`<div class="notice">${correct?"Goed! +3 XP.":escapeHTML(q.content)}</div>`;
+    if(correct)addXP(3);
+  });
+};
+
+const badgeDefinitions=[
+ {id:"first",icon:"🌱",name:"Eerste stap",desc:"Voeg je eerste transactie toe.",test:()=>data.transactions.length>=1},
+ {id:"tracker",icon:"📝",name:"Geldtracker",desc:"Noteer 10 transacties.",test:()=>data.transactions.length>=10},
+ {id:"goal",icon:"🎯",name:"Doelgericht",desc:"Maak je eerste spaardoel.",test:()=>data.goals.length>=1},
+ {id:"saver",icon:"🐷",name:"Spaarder",desc:"Spaar minstens €25 bij je doelen.",test:()=>sumGoals()>=25},
+ {id:"learner",icon:"📚",name:"Leergierig",desc:"Voltooi je eerste les.",test:()=>data.completedLessons.length>=1},
+ {id:"student",icon:"🎓",name:"Geldstudent",desc:"Voltooi 5 lessen.",test:()=>data.completedLessons.length>=5},
+ {id:"quiz",icon:"🧠",name:"Quizkampioen",desc:"Beantwoord een dagvraag.",test:()=>data.quizDays.length>=1},
+ {id:"challenge",icon:"🔥",name:"Volhouder",desc:"Voltooi 7 challeng dagen.",test:()=>data.challengeDays.length>=7},
+ {id:"planner",icon:"📅",name:"Planner",desc:"Voeg vaste kosten toe.",test:()=>data.fixed.length>=1},
+ {id:"xp",icon:"⭐",name:"XP-verzamelaar",desc:"Verzamel 50 XP.",test:()=>data.xp>=50},
+ {id:"sim",icon:"🎮",name:"Oefenexpert",desc:"Speel 3 simulatorrondes.",test:()=>data.simPlayed>=3},
+ {id:"goalcomplete",icon:"🏆",name:"Doel bereikt",desc:"Bereik een spaardoel.",test:()=>data.goals.some(g=>Number(g.saved)>=Number(g.target))}
+];
+function unlockedBadges(){return badgeDefinitions.filter(b=>b.test())}
+function renderProgress(){
+  const xp=Number(data.xp)||0,level=Math.floor(xp/50)+1,into=xp%50;
+  const names=["Starter","Geldontdekker","Slimme planner","Spaarheld","Geldexpert","Financieel talent"];
+  $("levelName").textContent=`Level ${level} · ${names[Math.min(level-1,names.length-1)]}`;
+  $("pointsText").textContent=`${xp} XP verzameld`;
+  setProgress("xpBar",into/50*100);
+  $("xpNext").textContent=`${50-into} XP tot het volgende level.`;
+  $("challengeProgress").textContent=`${data.challengeDays.length} van 30 dagen`;
+  $("challengePercent").textContent=Math.round(data.challengeDays.length/30*100)+"%";
+  setProgress("challengeBar",data.challengeDays.length/30*100);
+  $("challengeDays").innerHTML=Array.from({length:30},(_,i)=>`<button class="btn ${data.challengeDays.includes(i+1)?"primary":"outline"} smallbtn" data-challenge="${i+1}" aria-label="Challenge dag ${i+1}" title="Dag ${i+1}">${data.challengeDays.includes(i+1)?"✓":i+1}</button>`).join("");
+  document.querySelectorAll("[data-challenge]").forEach(b=>b.onclick=()=>{
+    const n=Number(b.dataset.challenge);
+    if(data.challengeDays.includes(n))data.challengeDays=data.challengeDays.filter(x=>x!==n);
+    else data.challengeDays.push(n);
+    data.challengeDays.sort((a,b)=>a-b);saveData();renderProgress();renderBadges();
+  });
+  renderBadges();renderLessonsProgressOnly();
+}
+function renderBadges(){
+  $("badgesGrid").innerHTML=badgeDefinitions.map(b=>{
+    const ok=b.test();
+    return `<div class="badge-card ${ok?"unlocked":""}"><div class="medal">${b.icon}</div><strong>${escapeHTML(b.name)}</strong><small>${escapeHTML(ok?"Behaald!":b.desc)}</small></div>`;
+  }).join("");
+}
+function renderLessonsProgressOnly(){
+  const el=$("learningProgress");if(!el)return;
+  const n=data.completedLessons.length;
+  el.innerHTML=`<div class="row-between"><strong>${n} van ${lessons.length} lessen voltooid</strong><span class="pill">${Math.round(n/lessons.length*100)}%</span></div><div class="progress" style="margin-top:12px"><span style="width:${n/lessons.length*100}%"></span></div>`;
+}
+
+const scenarios=[
+ {title:"De game in de aanbieding",story:"Je hebt €40 beschikbaar. Je ziet een game voor €30 die je graag wilt, maar je wilde ook €15 bewaren voor een uitstapje.",choices:[{text:"Ik koop de game meteen.",points:0,feedback:"Je houdt maar €10 over. Vergelijk je wensen met je andere plannen voordat je beslist."},{text:"Ik kijk eerst naar mijn budget en stel eventueel een spaardoel in.",points:10,feedback:"Slim! Je kijkt naar je totale plannen voordat je geld uitgeeft."},{text:"Ik leen direct geld zonder plan.",points:0,feedback:"Lenen brengt verplichtingen mee. Denk eerst na over de kosten en bespreek dit bij twijfel met een vertrouwde volwassene."}]},
+ {title:"Je onverwachte kosten",story:"Je had €25 vrij te besteden, maar je verwacht volgende week ook een noodzakelijke uitgave van €20.",choices:[{text:"Ik geef alle €25 meteen uit.",points:0,feedback:"Dan kan het lastig worden om de komende noodzakelijke kosten te betalen."},{text:"Ik houd rekening met de €20 en plan de rest.",points:10,feedback:"Goed gepland. Verwachte kosten meenemen helpt verrassingen voorkomen."},{text:"Ik negeer de komende rekening.",points:0,feedback:"Een rekening verdwijnt niet vanzelf. Zet verwachte kosten in je budget."}]},
+ {title:"Een verdachte geldprijs",story:"Je krijgt een bericht dat je een prijs hebt gewonnen. Om die te ontvangen moet je snel je bankgegevens en een verificatiecode doorgeven.",choices:[{text:"Ik stuur alles direct op.",points:0,feedback:"Deel nooit verificatiecodes of wachtwoorden. Dit kan oplichting zijn."},{text:"Ik deel niets en controleer het via een officieel kanaal.",points:10,feedback:"Heel goed. Druk en verzoeken om geheime codes zijn waarschuwingssignalen."},{text:"Ik stuur alleen mijn verificatiecode.",points:0,feedback:"Een verificatiecode kan toegang geven tot een account. Deel die met niemand."}]},
+ {title:"Je spaardoel",story:"Je wilt €120 sparen. Je hebt al €40 en kunt ongeveer €10 per week opzijzetten.",choices:[{text:"Ik bereken hoeveel weken ik nodig heb.",points:10,feedback:"Goed plan! Je mist €80, dus bij €10 per week heb je ongeveer 8 weken nodig."},{text:"Ik geef de €40 uit en begin ooit opnieuw.",points:0,feedback:"Dat kan, maar je doel komt dan verder weg. Bedenk wat voor jou haalbaar is."},{text:"Ik ga ervan uit dat het geld vanzelf groeit.",points:0,feedback:"Een doel gaat beter met een concreet plan en realistische bedragen."}]},
+ {title:"De grote korting",story:"Een webshop zegt dat een koptelefoon vandaag 50% korting heeft. Je wilde eigenlijk nog even sparen.",choices:[{text:"Ik koop hem alleen vanwege de korting.",points:0,feedback:"Een korting is geen besparing als je het product niet nodig hebt of het niet in je budget past."},{text:"Ik vergelijk prijzen en denk na of ik hem echt wil.",points:10,feedback:"Prima. Je kijkt naar de werkelijke waarde en je eigen plannen."},{text:"Ik koop er meteen twee.",points:0,feedback:"Meer kopen kost vaak meer geld. Vergelijk de totale uitgave met je budget."}]}
+];
+function renderSimStats(){
+  $("simScore").textContent=(data.simScore||0)+" punten";
+  $("simPlayed").textContent=data.simPlayed||0;
+  $("simBest").textContent=data.simBest||0;
+}
+function startSim(){
+  currentSim=scenarios[Math.floor(Math.random()*scenarios.length)];
+  $("simScenario").innerHTML=`<span class="pill">Oefenscenario</span><h3 style="margin-top:13px">${escapeHTML(currentSim.title)}</h3><p>${escapeHTML(currentSim.story)}</p><strong>Wat zou jij doen?</strong><div>${currentSim.choices.map((c,i)=>`<button class="sim-choice" data-sim-choice="${i}">${escapeHTML(c.text)}</button>`).join("")}</div><div id="simFeedback"></div>`;
+  document.querySelectorAll("[data-sim-choice]").forEach(b=>b.onclick=()=>{
+    if(b.disabled)return;
+    document.querySelectorAll("[data-sim-choice]").forEach(x=>x.disabled=true);
+    const c=currentSim.choices[Number(b.dataset.simChoice)];
+    data.simScore=(Number(data.simScore)||0)+c.points;
+    data.simPlayed=(Number(data.simPlayed)||0)+1;
+    data.simBest=Math.max(Number(data.simBest)||0,c.points);
+    $("simFeedback").innerHTML=`<div class="notice" style="margin-top:14px"><strong>${c.points?"Goed gekozen! +10 punten":"Leermoment"}</strong><br>${escapeHTML(c.feedback)}<br><button class="btn primary smallbtn" id="nextScenario" style="margin-top:12px">Volgend scenario →</button></div>`;
+    saveData();renderSimStats();addXP(c.points?5:1);
+    $("nextScenario").onclick=startSim;
+  });
+}
+$("startSimulator").onclick=startSim;
+
+function applyTheme(theme){
+  document.body.classList.remove("dark","blue","purple");
+  if(theme==="dark")document.body.classList.add("dark");
+  if(theme==="blue")document.body.classList.add("blue");
+  if(theme==="purple")document.body.classList.add("purple");
+  if(theme==="system"&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)document.body.classList.add("dark");
+  $("themeQuick").textContent=document.body.classList.contains("dark")?"☾":"☼";
+}
+function renderSettings(){
+  $("displayName").value=data.settings.name||"";
+  $("themeSelect").value=data.settings.theme||"green";
+  $("currencySelect").value=data.settings.currency||"EUR";
+  $("avatar").textContent=(data.settings.name||"S").trim().charAt(0).toUpperCase()||"S";
+}
+$("saveSettings").onclick=()=>{
+  data.settings.name=$("displayName").value.trim().slice(0,30);
+  data.settings.theme=$("themeSelect").value;
+  data.settings.currency=$("currencySelect").value;
+  saveData();applyTheme(data.settings.theme);renderSettings();renderAll();
+};
+$("themeQuick").onclick=()=>{
+  data.settings.theme=document.body.classList.contains("dark")?"green":"dark";
+  saveData();applyTheme(data.settings.theme);renderSettings();
+};
+$("backupData").onclick=()=>downloadFile(JSON.stringify(data,null,2),"slimgeld-backup.json","application/json");
+$("importData").onclick=()=>$("importFile").click();
+$("importFile").onchange=async e=>{
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  try{
+    const parsed=JSON.parse(await file.text());
+    if(!parsed||typeof parsed!=="object"||!Array.isArray(parsed.transactions)||!Array.isArray(parsed.goals)||!Array.isArray(parsed.fixed))throw new Error("Ongeldig formaat");
+    if(!confirm("Deze back-up vervangt de gegevens die nu in SlimGeld staan. Doorgaan?"))return;
+    const defaults=defaultData();data={...defaults,...parsed,settings:{...defaults.settings,...(parsed.settings||{})}};
+    saveData();applyTheme(data.settings.theme);renderAll();alert("Back-up teruggezet.");
+  }catch(err){alert("Importeren is niet gelukt. Gebruik een JSON-back-up die door SlimGeld is gemaakt.");}
+  finally{e.target.value=""}
+};
+$("clearData").onclick=()=>{
+  if(!confirm("Weet je zeker dat je alle transacties, doelen, instellingen en voortgang wilt verwijderen? Dit kan niet ongedaan worden gemaakt."))return;
+  data=defaultData();saveData();applyTheme(data.settings.theme);renderAll();go("home");
+};
+$("resetDemo").onclick=()=>{
+  if(data.transactions.length||data.goals.length||data.fixed.length){
+    if(!confirm("Voorbeeldgegevens toevoegen aan je huidige gegevens?"))return;
+  }
+  const now=todayISO(),m=currentMonth();
+  data.transactions.push(
+    {id:uid(),type:"income",amount:40,name:"Zakgeld",category:"Zakgeld",date:now},
+    {id:uid(),type:"expense",amount:8.5,name:"Lunch",category:"Horeca",date:now},
+    {id:uid(),type:"expense",amount:12,name:"Boodschappen",category:"Boodschappen",date:now}
+  );
+  if(!data.goals.length)data.goals.push({id:uid(),name:"Nieuwe koptelefoon",target:100,saved:25,date:""});
+  if(!data.fixed.length)data.fixed.push({id:uid(),name:"Telefoonabonnement (voorbeeld)",amount:10,day:15,category:"Abonnementen"});
+  if(!data.budget)data.budget=100;
+  saveData();renderAll();alert("Voorbeeldgegevens toegevoegd. Je kunt ze weer verwijderen via de gewone overzichten.");
+};
 
 function renderAll(){
-  renderTransactions();renderGoals();renderSubscriptions();
-  updateWeekly();calculateMonthly();loadBudget();
+  $("todayLabel").textContent=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"}).toUpperCase();
+  renderHome();renderTransactions();renderBudget();renderGoals();renderCalendar();renderStats();
+  renderTips();renderLessons();renderDailyQuiz();renderProgress();renderSimStats();renderSettings();
 }
-renderAll();renderQuestion();
+loadData();
+if(!$("txDate").value)$("txDate").value=todayISO();
+applyTheme(data.settings.theme||"green");
+renderAll();
 </script>
 </body>
 </html>
